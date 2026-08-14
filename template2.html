@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EFE9DC">
+<meta name="author" content="Dr Ganesh Sivasankara">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cannulation">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-180.png">
+<meta property="og:title" content="Cannulation geometry">
+<meta property="og:description" content="The geometry of IV cannulation: angle, length, depth and what follows from them. An interactive dictionary, every picture generated from the formula.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gundoc9.github.io/cannulation-geometry/">
+<meta property="og:image" content="https://gundoc9.github.io/cannulation-geometry/cannulation-geometry-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Cannulation geometry">
+<meta name="twitter:image" content="https://gundoc9.github.io/cannulation-geometry/cannulation-geometry-card.png">
+<title>Cannulation geometry</title>
+<!-- One file. Fonts are embedded; there are no network requests of any kind. -->
+<style>
+@font-face{font-family:'BS';src:url(__F_BS__) format('woff');font-weight:700;}
+@font-face{font-family:'IS';src:url(__F_IS__) format('woff');font-weight:400;}
+@font-face{font-family:'IS';src:url(__F_ISB__) format('woff');font-weight:700;}
+@font-face{font-family:'GM';src:url(__F_GM__) format('woff');font-weight:400;}
+:root{
+  --cream:#EFE9DC; --card:#F6F2E9; --ink:#1C1A17; --dim:#6E675C; --rule:#D8D0BE;
+  --amber:#7C580F; --acc:#F5C64B;
+  --disp:'BS',system-ui,sans-serif;
+  --body:'IS',-apple-system,system-ui,sans-serif;
+  --mono:'GM',ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+button{font:inherit;color:inherit;text-align:inherit;}
+html,body{margin:0;background:var(--cream);color:var(--ink);}
+body{font-family:var(--body);-webkit-font-smoothing:antialiased;}
+main{max-width:620px;margin:0 auto;padding:20px 16px 60px;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);margin:0;}
+.bk{background:none;border:0;padding:8px 8px 8px 0;margin:-8px 0 -8px;cursor:pointer;
+  color:var(--amber);font-family:var(--body);font-size:15px;}
+.bk:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+h1{font-family:var(--disp);font-weight:700;letter-spacing:0;margin:6px 0 0;line-height:.98;}
+.idx h1{font-size:clamp(38px,11vw,48px);}
+.ent h1{font-size:clamp(34px,10vw,42px);}
+.intro{font-size:16px;line-height:1.55;color:var(--ink);margin:14px 0 20px;}
+
+.row-card{display:flex;gap:12px;align-items:center;width:100%;text-align:left;cursor:pointer;
+  background:var(--card);border:1px solid var(--rule);border-radius:14px;
+  padding:11px 13px;margin-bottom:9px;min-height:78px;}
+.row-card:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.row-n{font-family:var(--mono);font-size:11px;color:var(--dim);flex:0 0 20px;}
+.row-th{flex:0 0 92px;height:56px;border-radius:9px;overflow:hidden;background:#0D181B;}
+.row-th canvas{display:block;width:92px;height:56px;}
+.row-t{flex:1;min-width:0;}
+.row-t b{display:block;font-family:var(--disp);font-weight:700;font-size:19px;line-height:1.05;}
+.row-t span{display:block;font-size:12px;line-height:1.35;color:var(--dim);margin-top:3px;}
+
+.win{border-radius:18px;overflow:hidden;background:#0D181B;margin-top:14px;line-height:0;
+  box-shadow:0 6px 22px rgba(20,24,25,.20);}
+.win canvas{display:block;width:100%;height:min(58vh,470px);touch-action:none;}
+.win canvas:focus-visible{outline:3px solid var(--amber);outline-offset:-3px;}
+.krow{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
+.krow button{min-height:44px;padding:0 15px;border-radius:22px;cursor:pointer;
+  font-family:var(--mono);font-size:12px;background:var(--card);color:var(--dim);
+  border:1px solid var(--rule);}
+.krow button[aria-pressed="true"]{background:var(--ink);color:var(--cream);border-color:var(--ink);}
+.krow button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.klab{margin:14px 0 0;}
+
+.oneline{border-left:3px solid var(--amber);padding:2px 0 2px 13px;margin:26px 0 0;}
+.oneline .eyebrow{color:var(--amber);}
+.oneline p{font-size:16px;line-height:1.45;margin:5px 0 0;}
+.lede{font-size:17px;line-height:1.55;color:var(--dim);margin:20px 0 14px;}
+h2{font-size:15px;font-weight:700;margin:24px 0 8px;line-height:1.35;}
+p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
+.dtab{margin:4px 0 16px;}
+.dtr{display:flex;align-items:baseline;justify-content:space-between;
+  border-top:1px solid var(--rule);padding:9px 0;}
+.dtr.dth{border-top:0;padding:0 0 7px;}
+.dth .dl,.dth .dv2,.dth .dvp{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--dim);}
+.dl{font-family:var(--body);font-size:13.5px;color:var(--dim);}
+.dv2{font-family:var(--mono);font-size:13px;color:var(--ink);text-align:right;}
+.dvp{font-family:var(--body);font-size:13.5px;color:var(--ink);text-align:right;}
+.src{background:var(--card);border:1px solid var(--rule);border-radius:12px;
+  padding:13px 14px;margin-top:24px;}
+.src p{font-size:13px;line-height:1.55;margin:0 0 7px;color:var(--ink);}
+.src p:last-child{margin:0;}
+.nav{display:flex;gap:10px;margin:26px 0 0;}
+.nav button{flex:1;min-height:60px;padding:10px 13px;cursor:pointer;border:1px solid var(--rule);
+  border-radius:13px;background:var(--card);}
+.nav button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.nav .r{text-align:right;}
+.nav span.k{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--dim);}
+.nav span.v{display:block;font-family:var(--disp);font-weight:700;font-size:16px;margin-top:3px;}
+.plink{display:inline-block;margin:10px 10px 0 0;padding:11px 15px;border:1.5px solid var(--amber);
+  border-radius:12px;color:var(--amber);font-family:var(--mono);font-size:12px;text-decoration:none;}
+.plink:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.foot{margin-top:32px;padding-top:15px;border-top:1px solid var(--rule);}
+.foot p{font-size:12.5px;line-height:1.55;color:var(--dim);margin:0 0 5px;}
+.sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
+  white-space:nowrap;border:0;clip:rect(0 0 0 0);}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<p class="sr" id="live" aria-live="polite" aria-atomic="true"></p>
+<script>
+const ERRS=[];
+function repErr(m){ ERRS.push(String(m).slice(0,220));
+  let p=document.getElementById('errpill');
+  if(!p){ p=document.createElement('button'); p.id='errpill'; p.type='button';
+    p.style.cssText='position:fixed;left:12px;bottom:12px;z-index:99;background:#B4472E;color:#EFE9DC;'+
+      'border:0;border-radius:12px;padding:8px 12px;font:12px ui-monospace,monospace;max-width:88vw;text-align:left;';
+    p.addEventListener('click',()=>{ p.textContent=ERRS.join('\n'); p.style.whiteSpace='pre-wrap'; });
+    document.body.appendChild(p); }
+  p.textContent='script errors: '+ERRS.length+' (tap for detail)';
+}
+window.addEventListener('error',e=>{
+  // masked cross-origin noise carries no location and no stack; nothing to act on, stay silent
+  const masked=(!e.message||/^Script error\.?$/.test(e.message))&&!(e.error&&e.error.stack);
+  if(masked) return;
+  repErr((e.message||'?')+' @'+(e.lineno||'?')+':'+(e.colno||'?'));
+});
+window.addEventListener('unhandledrejection',e=>{
+  if(e.reason==null) return;
+  repErr('promise: '+(e.reason&&e.reason.message||e.reason));
+});
+const CARDS = __CARDS__;
+const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
+const VERSION="v19", BUILT="14 August 2026";
+
+/* ================= geometry ================= */
+const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const G={
+  LEN:[19,25,32,45],
+  DEV:[{L:19,g:"24G",od:0.7,flow:22},{L:25,g:"22G",od:0.9,flow:35},
+       {L:32,g:"24G",od:0.7,flow:17},{L:45,g:"22G",od:0.9,flow:26}],
+  path:(d,t)=>d/sin(t),
+  reach:(L,t)=>0.35*L*sin(t),
+  inVein:(L,d,t)=>Math.max(0,L-d/sin(t)),
+};
+
+/* ================= palette ================= */
+const F0=[13,24,27],F1=[26,44,49],LL=[230,239,237],MU=[126,144,147],
+      AC=[245,198,75],VF=[10,16,20],PR=[150,162,164],
+      OKC=[126,204,157],NOC=[226,124,108],
+      TEAL=[[46,78,84],[58,98,106],[71,120,127]],
+      H24=[242,194,75],H22=[110,168,224],
+      GRIP=[118,130,133],RAIL=[104,120,123],PROBEINK=[60,70,72],
+      CLEARB=[214,226,228],GREYG=[160,172,178],HILITE=[255,255,255],
+      SCRN=[8,13,16],WFRM=[90,104,107];
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const MONO=s=>s+"px 'GM',monospace", DISP=s=>"700 "+s+"px 'BS',sans-serif";
+
+/* ================= field (gradient + grain), cached per size ============= */
+function hash(n){const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x);}
+const fcache={};
+function fieldImg(w,h){
+  const k=w+'x'+h; if(fcache[k])return fcache[k];
+  const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+  const c2=cv.getContext('2d'), img=c2.createImageData(w,h), d=img.data;
+  for(let y=0;y<h;y++){
+    const g=y/h, vign=1-0.10*g*g;
+    const r=(F0[0]*(1-g)+F1[0]*g)*vign, gg=(F0[1]*(1-g)+F1[1]*g)*vign, b=(F0[2]*(1-g)+F1[2]*g)*vign;
+    for(let x=0;x<w;x++){
+      const o=(y*w+x)*4, n=(hash(y*w+x)-0.5)*7;
+      d[o]=r+n; d[o+1]=gg+n; d[o+2]=b+n; d[o+3]=255;
+    }
+  }
+  c2.putImageData(img,0,0); fcache[k]=cv; return cv;
+}
+
+/* ================= draw helpers ================= */
+function rl(ctx,x0,y0,x1,y1,col,w,a=1,cap=true){
+  ctx.strokeStyle=rgba(col,a); ctx.lineWidth=w; ctx.lineCap=cap?'round':'butt';
+  ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+}
+function glowline(ctx,x0,y0,x1,y1,col,w){
+  ctx.save(); ctx.shadowColor=rgba(col,0.55); ctx.shadowBlur=10;
+  rl(ctx,x0,y0,x1,y1,col,w,0.92,false); ctx.restore();
+}
+function arcp(ctx,cx,cy,r,a0,a1,col,w,a=1){
+  if(!(r>0)) return;
+  ctx.strokeStyle=rgba(col,a); ctx.lineWidth=w; ctx.lineCap='round';
+  ctx.beginPath(); ctx.arc(cx,cy,r,rad(a0),rad(a1)); ctx.stroke();
+}
+function handle(ctx,x,y,r=11){
+  if(!(r>0)) return;
+  ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=8; ctx.shadowOffsetY=2;
+  ctx.fillStyle=rgba(AC,1); ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.restore();
+  ctx.strokeStyle=rgba(F0,1); ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.stroke();
+  ctx.fillStyle=rgba(F0,1); ctx.beginPath(); ctx.arc(x,y,3.2,0,7); ctx.fill();
+}
+function cannula(ctx,x,y,ang,h,col,alpha=1){
+  /* Real-device anatomy, per the user's photos: the gauge colour is the FRONT
+     CONE tapering into the catheter; behind it a clear flashback chamber, then
+     the wider vented plug with grip ridges. Wings sit at the junction.
+     (x,y) is where the catheter leaves the cone; the glyph extends back. */
+  if(!(h>5)){ rl(ctx,x-6*cos(ang),y-6*sin(ang),x,y,col,Math.max(3,h*0.9),alpha); return; }
+  ctx.save(); ctx.translate(x,y); ctx.rotate(rad(ang)); ctx.globalAlpha=alpha;
+  const C=1.1*h, B=1.5*h, P=0.45*h;
+  ctx.fillStyle=rgba(col,1);
+  ctx.beginPath();
+  ctx.moveTo(0,-0.20*h); ctx.lineTo(-C,-0.50*h); ctx.lineTo(-C,0.50*h); ctx.lineTo(0,0.20*h);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle=rgba(HILITE,0.20);
+  ctx.beginPath();
+  ctx.moveTo(-0.06*h,-0.16*h); ctx.lineTo(-C+0.10*h,-0.40*h); ctx.lineTo(-C+0.10*h,-0.12*h);
+  ctx.lineTo(-0.06*h,-0.02*h); ctx.closePath(); ctx.fill();
+  ctx.fillStyle=rgba(col,1);
+  ctx.beginPath(); ctx.roundRect(-C-0.10*h,-0.86*h,0.42*h,0.34*h,0.08*h); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-C-0.10*h, 0.52*h,0.42*h,0.34*h,0.08*h); ctx.fill();
+  ctx.fillStyle=rgba(CLEARB,0.28);
+  ctx.strokeStyle=rgba(LL,0.60); ctx.lineWidth=Math.max(1,0.06*h);
+  ctx.beginPath(); ctx.roundRect(-C-B,-0.44*h,B,0.88*h,0.16*h); ctx.fill(); ctx.stroke();
+  ctx.fillStyle=rgba(CLEARB,0.42);
+  ctx.beginPath(); ctx.roundRect(-C-B-P,-0.55*h,P,1.10*h,0.14*h); ctx.fill(); ctx.stroke();
+  for(let k=1;k<=3;k++){ const rx=-C-B-P*k/4;
+    rl(ctx,rx,-0.42*h,rx,0.42*h,LL,Math.max(1,0.05*h),0.45); }
+  ctx.globalAlpha=1; ctx.restore();
+}
+function lsText(ctx,s,x,y,font,col,a=1,anchor="l",ls=1.4){
+  ctx.font=font; ctx.fillStyle=rgba(col,a); ctx.textBaseline='alphabetic';
+  let tot=0; for(const ch of s) tot+=ctx.measureText(ch).width+ls;
+  tot-=ls;
+  let cx = anchor==="r" ? x-tot : anchor==="m" ? x-tot/2 : x;
+  for(const ch of s){ ctx.fillText(ch,cx,y); cx+=ctx.measureText(ch).width+ls; }
+}
+function txt(ctx,s,x,y,font,col,a=1,align="left",base="alphabetic"){
+  ctx.font=font; ctx.fillStyle=rgba(col,a); ctx.textAlign=align; ctx.textBaseline=base;
+  ctx.fillText(s,x,y); ctx.textAlign="left"; ctx.textBaseline="alphabetic";
+}
+function scaleRight(ctx,W,H,x,y0,S,maxMm){
+  rl(ctx,x,0,x,H,MU,1,0.45,false);
+  for(let mm=0;mm<=maxMm;mm++){
+    const y=y0+mm*S; if(y>H-46)break;
+    const maj=mm%5===0;
+    rl(ctx,x,y,x+(maj?10:6),y,MU,1.5,maj?0.9:0.5,false);
+    if(maj&&mm>0) txt(ctx,String(mm),x-7,y+3.5,MONO(12),MU,0.9,"right");
+  }
+}
+function readout(ctx,H,label,big,unit){
+  if(!big) return;
+  lsText(ctx,label,20,H-52,MONO(10),MU,0.95,"l",1.5);
+  txt(ctx,big,20,H-14,DISP(34),AC);
+  const bw=ctx.measureText(big).width;
+  txt(ctx,unit,25+bw,H-15,MONO(12),MU,0.9);
+}
+function hint(ctx,W,H,s){
+  ctx.font=MONO(10);
+  const w=ctx.measureText(s).width*1.12+26, x=W-14-w, y=H-36;
+  ctx.fillStyle=rgba(F1,0.85); ctx.strokeStyle=rgba(MU,0.4); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(x,y,w,22,11); ctx.fill(); ctx.stroke();
+  lsText(ctx,s,x+13,y+15,MONO(10),AC,1,"l",0.8);
+  return x;
+}
+if(!CanvasRenderingContext2D.prototype.roundRect){
+  CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
+    this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r); this.arcTo(x+w,y+h,x,y+h,r);
+    this.arcTo(x,y+h,x,y,r); this.arcTo(x,y,x+w,y,r); this.closePath();};
+}
+
+/* ================= the pictures =================
+   Each: (ctx,W,H,card,st,small) -> aria string.
+   st holds continuous values; drag(card,st,x,y,W,H) maps a pointer to state. */
+
+function picDepth(ctx,W,H,c,st,small){
+  const OD=3,D0=5,cc=clamp(st.press??0,0,1),t=st.targ??0;
+  const ry=(OD/2)*(1-0.55*cc), rx=(OD/2)**2/ry, read=D0*(1-0.30*cc);
+  const top=small?4:16, S=(H-top-(small?6:46))/(D0+OD+1.2);
+  const backY=top+(small?10:34)+(D0+OD)*S, face=backY-(read+2*ry)*S, cx=W*0.47;
+  ctx.drawImage(fieldImg(W,H),0,0);
+  ctx.fillStyle=rgba(VF,1);
+  ctx.beginPath(); ctx.ellipse(cx,backY-ry*S,rx*S,ry*S,0,0,7); ctx.fill();
+  ctx.strokeStyle=rgba(LL,0.9); ctx.lineWidth=small?1.2:1.9; ctx.stroke();
+  ctx.fillStyle=rgba(PR,1);
+  ctx.beginPath(); ctx.roundRect(small?4:20,top,W-(small?8:40),face-top,small?4:10); ctx.fill();
+  ctx.fillStyle=rgba(GRIP,1);
+  ctx.beginPath(); ctx.roundRect(small?4:20,top,W-(small?8:40),small?3:9,small?2:5); ctx.fill();
+  if(!small){
+    for(const gx of [-12,0,12]) rl(ctx,cx+gx,top+18,cx+gx,face-14,GRIP,2.2,0.85);
+    lsText(ctx,"PROBE",34,(top+face)/2+4,MONO(10),PROBEINK,1,"l",1.6);
+    const hx=W-44,hy=(top+face)/2;
+    ctx.fillStyle=rgba(AC,1); ctx.beginPath(); ctx.roundRect(hx-9,hy-16,18,32,9); ctx.fill();
+    ctx.fillStyle=rgba(F0,1);
+    ctx.beginPath(); ctx.moveTo(hx-4,hy-5); ctx.lineTo(hx+4,hy-5); ctx.lineTo(hx,hy-10); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(hx-4,hy+5); ctx.lineTo(hx+4,hy+5); ctx.lineTo(hx,hy+10); ctx.fill();
+  }
+  glowline(ctx,0,face,W-(small?0:46),face,LL,small?1.4:2.4);
+  if(small) return "";
+  scaleRight(ctx,W,H,W-28,face,S,9);
+  const fw=backY-2*ry*S, cyv=backY-ry*S, ty=fw+(cyv-fw)*t, val=(ty-face)/S;
+  rl(ctx,cx,face,cx,ty,AC,1.7,0.6);
+  for(const y of [face,ty]) rl(ctx,cx-6,y,cx+6,y,AC,2.6);
+  txt(ctx,val.toFixed(1)+" mm",cx+13,(face+ty)/2+4,MONO(12),AC);
+  hint(ctx,W,H,"DRAG THE PROBE");
+  readout(ctx,H,"DEPTH FROM PROBE FACE",val.toFixed(1),"mm");
+  return `Depth reads ${val.toFixed(1)} millimetres. The vein is fixed; the probe has moved.`;
+}
+picDepth.drag=(c,st,x,y,W,H)=>{ st.press=clamp((y-70)/(H*0.34),0,1); };
+
+function angGeom(st,W,H,small){
+  const ang=clamp(st.angle??45,20,60), D=5;
+  let skin=small?10:48;
+  const Sv=small?7:(H*0.67-skin)/D;
+  const S=Math.min(Sv,(W-(small?24:104))/(D/tan(ang)));   // shrink the triangle, keep the shape
+  if(!small) skin=Math.min(48+Math.max(0,(Sv-S))*D/2, H-155-D*S);   // centre when width-bound, original bottom budget kept
+  const punc=small?10:52;
+  return {ang,D,skin,S,punc,vt:skin+D*S,tipx:punc+D/tan(ang)*S};
+}
+function picAngleTri(ctx,W,H,c,st,small){
+  const {ang,D,skin,S,punc}=angGeom(st,W,H,small);
+  ctx.drawImage(fieldImg(W,H),0,0);
+  const vt=skin+D*S;
+  ctx.fillStyle=rgba(VF,1); ctx.fillRect(0,vt,W,H-vt);
+  rl(ctx,0,vt,W,vt,LL,small?1.2:1.8,0.85,false);
+  glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
+  const tipx=punc+D/tan(ang)*S;
+  if(!small){
+    lsText(ctx,"SKIN",W-16,skin-12,MONO(10),MU,0.9,"r",1.5);
+    lsText(ctx,"VEIN",20,vt+16,MONO(10),MU,0.9,"l",1.5);
+    rl(ctx,punc,skin,punc,vt,MU,1.5,0.75);
+    ctx.strokeStyle=rgba(MU,0.65); ctx.lineWidth=1.3;
+    ctx.strokeRect(punc,vt-8,8,8);
+    txt(ctx,D.toFixed(1)+" mm",punc+11,(skin+vt)/2+4,MONO(12),LL,0.95);
+    arcp(ctx,punc,skin,34,0,ang,MU,1.8,0.85);
+    const bx=punc+64*cos(ang/2), by2=skin+Math.max(14,64*sin(ang/2));
+    txt(ctx,Math.round(ang)+"\u00b0",bx,by2+5,MONO(14),AC);
+    const RAD=Math.hypot(tipx-punc,vt-skin);
+    arcp(ctx,punc,skin,RAD,clamp(ang-14,16,90),clamp(ang+2,16,90),RAIL,2.2,0.9);
+  }
+  ctx.save(); ctx.shadowColor=rgba(AC,0.5); ctx.shadowBlur=10;
+  rl(ctx,punc,skin,tipx,vt,AC,small?2.5:5.2); ctx.restore();
+  if(small) return "";
+  const nx=cos(ang+90),ny=sin(ang+90);
+  for(const [bx,by] of [[punc,skin],[tipx,vt]])
+    rl(ctx,bx-nx*5,by-ny*5,bx+nx*5,by+ny*5,AC,2.4);
+  const mid=[(punc+tipx)/2,(skin+vt)/2];
+  txt(ctx,(D/sin(ang)).toFixed(1)+" mm",mid[0]+11,mid[1]-9,MONO(12),AC);
+  handle(ctx,tipx,vt,12);
+  hint(ctx,W,H,"DRAG THE TIP");
+  readout(ctx,H,"PATH \u00f7 DEPTH",(1/sin(ang)).toFixed(1)+"\u00d7","");
+  return `Entry angle ${Math.round(ang)} degrees. The path is ${(1/sin(ang)).toFixed(1)} times the depth.`;
+}
+picAngleTri.drag=(c,st,x,y,W,H)=>{
+  const g0=angGeom(st,W,H,false);           // pivot from the current frame
+  st.angle=clamp(Math.atan2(y-g0.skin,x-g0.punc)/Math.PI*180,20,60);
+};
+
+function trackGeom(c,st,W,H,small){
+  const L=c.fixL||G.LEN[st.len??2], ang=clamp(st.angle??45,20,60), D=5, dv=1.5;
+  const span=6.5*cos(ang)+(L - D*tan(ang/2));          // hub projection + catheter run
+  let S=(W-(small?18:58))/span;
+  if(!small) S=Math.min(S,(H*0.77-180)/8);             // two-verdict worst case must clear the readout
+  const lin=G.inVein(L,D,ang), len2=dv/sin(ang), len3=lin-len2;
+  const skin=small?H*0.30:H*0.23, punc=(small?4:14)+6.5*cos(ang)*S;
+  const wallT=skin+D*S, wallB=wallT+3*S, ride=wallT+dv*S;
+  const ex=punc+D/tan(ang)*S, ix=ex+dv/tan(ang)*S, tip=ix+len3*S;
+  return {L,ang,D,dv,S,lin,len2,len3,skin,punc,wallT,wallB,ride,ex,ix,tip};
+}
+function picTrack(ctx,W,H,c,st,small){
+  const g=trackGeom(c,st,W,H,small);
+  const {L,ang,S,lin,len2,len3,skin,punc,wallT,wallB,ride,ex,ix,tip}=g;
+  ctx.drawImage(fieldImg(W,H),0,0);
+  ctx.fillStyle=rgba(VF,1); ctx.fillRect(0,wallT,W,wallB-wallT);
+  rl(ctx,0,wallT,W,wallT,LL,small?1.2:1.8,0.85,false);
+  rl(ctx,0,wallB,W,wallB,LL,small?1:1.6,0.55,false);
+  glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
+  const hl=(c.marks||[]).includes("lumen"), inCol=hl?AC:LL;
+  const dev=G.DEV.find(d=>d.L===L)||G.DEV[2], hcol=dev.g==="24G"?H24:H22;
+  cannula(ctx,punc-0.6*S*cos(ang),skin-0.6*S*sin(ang),ang,
+          small?Math.min(2.05*S,7):Math.min(2.05*S,22),hcol);
+  ctx.save(); ctx.shadowColor=rgba(LL,0.4); ctx.shadowBlur=8;
+  rl(ctx,punc,skin,ex,wallT,LL,small?2.6:4.5); ctx.restore();
+  rl(ctx,ex,wallT,ix,ride,inCol,small?2.6:4.5);
+  rl(ctx,ix,ride,tip,ride,inCol,small?2.6:4.5);
+  if(small) return "";
+  lsText(ctx,"SKIN",W-16,skin-12,MONO(10),MU,0.9,"r",1.5);
+  lsText(ctx,"VEIN",20,wallT+15,MONO(10),MU,0.9,"l",1.5);
+  lsText(ctx,"TIP",Math.min(tip,W-64),wallB+16,MONO(10),MU,0.9,"m",1.4);
+  const at=mm=>{
+    if(mm<=len3) return [tip-mm*S,ride,0];
+    if(mm<=lin){ const t=mm-len3; return [ix-t*cos(ang)*S,ride-t*sin(ang)*S,ang]; }
+    const t=mm-lin; return [ex-t*cos(ang)*S,wallT-t*sin(ang)*S,ang];
+  };
+  const mark=(mm,lab,above)=>{
+    const ok=mm<=lin, col=ok?OKC:NOC, [x,y,a0]=at(mm);
+    const nx=cos(a0+90),ny=sin(a0+90);
+    rl(ctx,x-nx*9,y-ny*9,x+nx*9,y+ny*9,col,3);
+    if(above){ txt(ctx,lab,x-nx*9,y-ny*9-7,MONO(12),col,1,"center"); }
+    else{ const ly=wallB+20; rl(ctx,x,y+10,x,ly-9,col,1.2,0.55,false);
+      txt(ctx,lab,Math.min(Math.max(x,26),W-44),ly,MONO(12),col,1,"center","middle"); }
+    return ok;
+  };
+  let note=[], vy=wallB+36;
+  if(!small){
+    rl(ctx,ex,vy,tip,vy,MU,1.4,0.65,false);
+    for(const bx of [ex,tip]) rl(ctx,bx,vy-5,bx,vy,MU,1.4,0.65,false);
+    txt(ctx,lin.toFixed(1)+" mm in the vein",(ex+tip)/2,vy+15,MONO(12),MU,0.85,"center");
+  }
+  vy+=52;
+  if((c.marks||[]).includes("m65")){
+    const ok=mark(0.65*L,"65%",true);
+    txt(ctx,`0.65 × ${L} = ${(0.65*L).toFixed(1)} mm   ${ok?"inside":"past the skin"}`,20,vy,MONO(12),ok?OKC:NOC);
+    vy+=26; note.push(ok?"rule met":"rule not met");
+  }
+  if((c.marks||[]).includes("abs")){
+    const beyond=27.5>L;
+    if(beyond){ txt(ctx,"27.5 mm is beyond the hub",20,vy,MONO(12),NOC); }
+    else{ const ok=mark(27.5,"27.5",false);
+      txt(ctx,`27.5 mm   ${ok?"inside":"outside the vein"}`,20,vy,MONO(12),ok?OKC:NOC);
+      note.push(ok?"floor met":"floor not met"); }
+    if(beyond) note.push("shorter than the floor");
+    vy+=26;
+  }
+  const sx=W-28;
+  for(let mm=0;mm<=8;mm++){
+    const y=skin+mm*S, maj=mm%5===0;
+    if(y>wallT+3&&y<wallB-3&&mm!==5) continue;
+    rl(ctx,sx,y,sx+(maj?10:6),y,MU,1.6,maj?0.9:0.5,false);
+    if(maj&&mm>0) txt(ctx,String(mm),sx-7,y+3.5,MONO(12),MU,0.9,"right");
+  }
+  const isLen=(c.ctrl||[]).some(k=>k.key==="len");
+  if((c.ctrl||[]).length&&!isLen) hint(ctx,W,H,"DRAG THE ANGLE");
+  const R=c.numeral?c.numeral(L,ang,lin):null;
+  if(R&&R[1]) readout(ctx,H,R[0],R[1],R[2]);
+  return `${L} millimetre catheter at ${Math.round(ang)} degrees, skin horizontal, vein beneath. ${lin.toFixed(1)} millimetres in the vein. ${note.join(", ")}`;
+}
+picTrack.drag=(c,st,x,y,W,H)=>{
+  if((c.ctrl||[]).some(k=>k.key==="len")) return;
+  const g=trackGeom(c,st,W,H,false);
+  const dx=Math.max(6,x-g.punc);
+  st.angle=clamp(Math.atan((g.D*g.S)/dx)/Math.PI*180,20,60);
+};
+
+function picArc(ctx,W,H,c,st,small){
+  const ang=clamp(st.angle??45,20,60), selL=G.LEN[st.len??3];
+  const skin=small?8:46, punc=small?8:52;
+  const S=(Math.min(W-(small?12:100),H-skin-(small?6:66)))/(0.35*45);
+  ctx.drawImage(fieldImg(W,H),0,0);
+  glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
+  if(!small){
+    lsText(ctx,"SKIN",W-16,skin-12,MONO(10),MU,0.9,"r",1.5);
+    if(c.wedge){
+      ctx.fillStyle=rgba(AC,0.09); ctx.beginPath(); ctx.moveTo(punc,skin);
+      ctx.arc(punc,skin,0.35*45*S,rad(20),rad(45)); ctx.closePath(); ctx.fill();
+    }else{
+      const vy=skin+6*S*0.35*45/ (0.35*45) * (6/ (0.35*45)); // vein at 6 mm
+      const vyy=skin+6*S;
+      rl(ctx,0,vyy,W-46,vyy,MU,1.5,0.55,false);
+      lsText(ctx,"VEIN AT 6.0 mm",16,vyy-11,MONO(10),MU,0.85,"l",1.2);
+    }
+    ctx.fillStyle=rgba(LL,1); ctx.beginPath(); ctx.arc(punc,skin,3.6,0,7); ctx.fill();
+  }
+  G.LEN.forEach((L,i)=>{
+    const on=L===selL, r=0.35*L*S;
+    arcp(ctx,punc,skin,r,12,80,on?AC:TEAL[Math.min(i,2)],on?(small?2.4:3.8):(small?1.6:2.8),on?1:0.85);
+    if(!small){
+      const fx=punc+r*cos(80),fy=skin+r*sin(80);
+      txt(ctx,String(L),fx-9,fy+4,MONO(12),on?AC:MU,0.95,"right");
+    }
+  });
+  if(small) return "";
+  scaleRight(ctx,W,H,W-28,skin,S,17);
+  const r=0.35*selL*S, hx=punc+r*cos(ang), hy=skin+r*sin(ang);
+  rl(ctx,punc,skin,hx,hy,AC,1.4,0.5);
+  rl(ctx,hx+13,hy,W-32,hy,AC,1.4,0.7,false);
+  handle(ctx,hx,hy,10);
+  hint(ctx,W,H,"DRAG ALONG THE ARC");
+  if(c.wedge){
+    const kept=100*sin(ang)/sin(45);
+    readout(ctx,H,"OF THE 45\u00b0 REACH KEPT",kept.toFixed(1),"%");
+    return `At ${Math.round(ang)} degrees, ${kept.toFixed(1)} per cent of the 45 degree reach remains, for every catheter.`;
+  }
+  readout(ctx,H,"MAX VEIN DEPTH SERVED",G.reach(selL,ang).toFixed(1),"mm");
+  return `${selL} millimetre catheter at ${Math.round(ang)} degrees reaches ${G.reach(selL,ang).toFixed(1)} millimetres.`;
+}
+picArc.drag=(c,st,x,y,W,H)=>{ st.angle=clamp(Math.atan2(y-46,x-52)/Math.PI*180,20,60); };
+
+function picDevices(ctx,W,H,c,st,small){
+  const sel=st.len??2, S=(W-(small?14:70))/56.5, x0=small?6:26;
+  ctx.drawImage(fieldImg(W,H),0,0);
+  const rows=[...Array(4)].map((_,i)=>(small?8:60)+i*(small?12:68));
+  G.DEV.forEach((d,i)=>{
+    const y=rows[i], on=i===sel, a=on?1:0.45, col=d.g==="24G"?H24:H22;
+    cannula(ctx,x0+6.5*S,y,0,6.5*S/3.05,col,a);
+    rl(ctx,x0+6.5*S,y,x0+(6.5+d.L)*S,y,LL,Math.max(small?2:3.4,d.od*S*0.9),a);
+    if(!small) lsText(ctx,`${d.g} \u00b7 ${d.L} mm \u00b7 ${d.od} mm bore`,x0,y-16,MONO(10),on?col:MU,on?1:0.8,"l",1.0);
+  });
+  if(small) return "";
+  const ay=rows[3]+40;
+  rl(ctx,x0+6.5*S,ay,x0+(6.5+50)*S,ay,MU,1.4,0.6,false);
+  for(let mm=0;mm<=50;mm+=5){
+    const xx=x0+(6.5+mm)*S, maj=mm%10===0;
+    rl(ctx,xx,ay,xx,ay+(maj?8:5),MU,1.4,maj?0.85:0.5,false);
+    if(maj) txt(ctx,String(mm),xx,ay+24,MONO(10),MU,0.85,"center");
+  }
+  lsText(ctx,"mm FROM THE HUB",x0+(6.5+46)*S,ay+42,MONO(10),MU,0.8,"r",1.0);
+  const d=G.DEV[sel];
+  if(c.flow) readout(ctx,H,"MAX FLOW",String(d.flow),"mL/min");
+  else readout(ctx,H,"LENGTH",String(d.L),"mm");
+  return `${d.g}, ${d.L} millimetres, ${d.od} millimetre bore, ${d.flow} millilitres per minute.`;
+}
+
+function picCross(ctx,W,H,c,st,small){
+  const thr=(st.thr??45)/100, minv=0.9/thr;
+  ctx.drawImage(fieldImg(W,H),0,0);
+  const S=small?12:52, cx=small?W*0.5:(84+(0.9/0.33/2)*S), cy=small?H*0.5:H*0.40;
+  const rV=minv/2*S, rC=0.45*S;
+  ctx.fillStyle=rgba(VF,1); ctx.beginPath(); ctx.arc(cx,cy,rV,0,7); ctx.fill();
+  ctx.strokeStyle=rgba(LL,0.9); ctx.lineWidth=small?1.2:2; ctx.stroke();
+  const ccy=cy;
+  ctx.fillStyle=rgba(H22,1); ctx.beginPath(); ctx.arc(cx,ccy,rC,0,7); ctx.fill();
+  ctx.strokeStyle=rgba(F0,1); ctx.lineWidth=1.6; ctx.stroke();
+  if(small) return "";
+  txt(ctx,"22G",cx,ccy+4,MONO(10),F0,1,"center");
+  const xd=cx-rV-18;
+  rl(ctx,xd,cy-rV,xd,cy+rV,AC,1.6,0.8);
+  for(const yy of [cy-rV,cy+rV]){
+    rl(ctx,xd-6,yy,xd+6,yy,AC,2.6);
+    rl(ctx,xd+8,yy,cx-rV+4,yy,MU,1.1,0.45,false);
+  }
+  txt(ctx,minv.toFixed(1)+" mm",xd-12,cy+4,MONO(12),AC,1,"right");
+    const gx=W-152;
+  lsText(ctx,`MIN VEIN \u00b7 \u2264${Math.round(thr*100)}%`,gx,54,MONO(10),MU,0.9,"l",1.2);
+  [["24G",0.7,H24],["22G",0.9,H22],["20G",1.1,GREYG],["18G",1.3,GREYG]]
+  .forEach(([g,od,col],i)=>{
+    const y=86+i*50, r=od*11;
+    ctx.fillStyle=rgba(col,1); ctx.beginPath(); ctx.arc(gx+9,y,r,0,7); ctx.fill();
+    txt(ctx,g,gx+34,y+4,MONO(12),LL,0.95);
+    txt(ctx,(od/thr).toFixed(1),gx+86,y+4,MONO(12),LL);
+  });
+  ctx.font=MONO(10);
+  const capw=ctx.measureText("SMALLEST VEIN THAT PASSES").width*1.34;
+  lsText(ctx,"SMALLEST VEIN THAT PASSES",Math.min(cx,gx-16-capw/2),cy+rV+22,MONO(10),MU,0.85,"m",1.1);
+  readout(ctx,H,"MIN VEIN FOR A 22G",minv.toFixed(1),"mm");
+  return `Threshold ${Math.round(thr*100)} per cent. A 22G needs a ${minv.toFixed(1)} millimetre vein.`;
+}
+
+function picStages(ctx,W,H,c,st,small){
+  /* Enter at 30, advance a millimetre or two inside the vein, then a PURE
+     PIVOT about the puncture. The pivot is small because a pivot on half a
+     millimetre of purchase would swing the tip straight back out. */
+  const u=clamp(st.stage??0,0,2), D=5, ENT=30, dIn=0.30, dAdv=1.20;
+  const s1=0.80*D/sin(ENT), s2=(D+dIn)/sin(ENT), s3=(D+dIn+dAdv)/sin(ENT);
+  const A3=Math.asin((D+0.60)/s3)/Math.PI*180;
+  let sh,A;
+  if(u<=1){ sh=s1+(s2-s1)*u; A=ENT; }
+  else if(u<=1.5){ sh=s2+(s3-s2)*(u-1)*2; A=ENT; }
+  else { sh=s3; A=ENT+(A3-ENT)*(u-1.5)*2; }
+  const d=sh*sin(A), run=sh*cos(A);
+  let S=(W-(small?26:56))/(s3*cos(A3)+6.3*cos(A3)+0.8);
+  if(!small) S=Math.min(S,(H-124)/8);                  // the band must clear the readout
+  const skin=small?10:52, P=(small?6:16)+6.3*cos(A3)*S;
+  const wallT=skin+D*S, wallB=wallT+3*S;
+  const tx=P+run*S, ty=skin+d*S;
+  ctx.drawImage(fieldImg(W,H),0,0);
+  ctx.fillStyle=rgba(VF,1); ctx.fillRect(0,wallT,W,wallB-wallT);
+  rl(ctx,0,wallT,W,wallT,LL,small?1.2:1.8,0.85,false);
+  rl(ctx,0,wallB,W,wallB,LL,small?1:1.6,0.55,false);
+  glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
+  cannula(ctx,P-0.6*S*cos(A),skin-0.6*S*sin(A),A,small?7:Math.min(2.05*S,22),H24);
+  ctx.save(); ctx.shadowColor=rgba(LL,0.4); ctx.shadowBlur=8;
+  rl(ctx,P,skin,tx,ty,LL,small?2.6:4.5); ctx.restore();
+  ctx.fillStyle=rgba(AC,1); ctx.beginPath(); ctx.arc(tx,ty,small?2.4:3.8,0,7); ctx.fill();
+  if(small) return "";
+  lsText(ctx,"SKIN",W-16,skin-12,MONO(10),MU,0.9,"r",1.5);
+  lsText(ctx,"VEIN",20,wallT+15,MONO(10),MU,0.9,"l",1.5);
+  hint(ctx,W,H,"DRAG THE TIP");
+  readout(ctx,H,"SHAFT ANGLE",String(Math.round(A))+"\u00b0","");
+  const names=["approaching the vein","just through the wall","a small advance, then the drop"];
+  return `Stage ${Math.round(u)+1} of 3, ${names[Math.round(u)]}. Shaft at ${Math.round(A)} degrees, tip ${d.toFixed(1)} millimetres deep.`;
+}
+picStages.drag=(c,st,x,y,W,H)=>{
+  const D=5,ENT=30,dIn=0.30,dAdv=1.20;
+  const s1=0.80*D/sin(ENT), s2=(D+dIn)/sin(ENT), s3=(D+dIn+dAdv)/sin(ENT);
+  const A3=Math.asin((D+0.60)/s3)/Math.PI*180;
+  const S=(W-56)/(s3*cos(A3)+6.3*cos(A3)+0.8), P=16+6.3*cos(A3)*S;
+  const r=clamp((x-P)/S, s1*cos(ENT), s3*cos(A3));
+  const r1=s2*cos(ENT), r15=s3*cos(ENT);
+  if(r<=r1) st.stage=(r-s1*cos(ENT))/(r1-s1*cos(ENT));
+  else if(r<=r15) st.stage=1+0.5*(r-r1)/(r15-r1);
+  else { const A=Math.acos(clamp(r/s3,-1,1))/Math.PI*180; st.stage=1.5+0.5*(ENT-A)/(ENT-A3); }
+  st.stage=clamp(st.stage,0,2);
+};
+function planesGeom(W,H,small){
+  const ANG=30,D=5,DV=1.5,L=32;
+  const RUNX=D/tan(ANG)+DV/tan(ANG)+(L-D/sin(ANG)-DV/sin(ANG));
+  let S1=(W-(small?18:36))/(6.3*cos(ANG)+33.5+2);
+  const skin=small?12:56;
+  if(!small) S1=Math.min(S1,(H*0.30-skin)/(D+3));
+  const punc=(small?4:16)+6.3*cos(ANG)*S1;
+  return {ANG,D,DV,L,RUNX,S1,skin,punc};
+}
+function picPlanes(ctx,W,H,c,st,small){
+  const g=planesGeom(W,H,small), {ANG,D,DV,RUNX,S1,skin,punc}=g;
+  const p=clamp(st.plane??14,4,33.5);
+  const wallT=skin+D*S1, wallB=wallT+3*S1;
+  const ex=punc+D/tan(ANG)*S1, ix=ex+DV/tan(ANG)*S1, tip=punc+RUNX*S1, ride=wallT+DV*S1;
+  ctx.drawImage(fieldImg(W,H),0,0);
+  ctx.fillStyle=rgba(VF,1); ctx.fillRect(0,wallT,W,wallB-wallT);
+  rl(ctx,0,wallT,W,wallT,LL,small?1.2:1.8,0.85,false);
+  rl(ctx,0,wallB,W,wallB,LL,small?1:1.6,0.55,false);
+  glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
+  ctx.save(); ctx.shadowColor=rgba(LL,0.4); ctx.shadowBlur=8;
+  rl(ctx,punc,skin,ex,wallT,LL,small?2.4:4.5); ctx.restore();
+  rl(ctx,ex,wallT,ix,ride,LL,small?2.4:4.5);
+  rl(ctx,ix,ride,tip,ride,LL,small?2.4:4.5);
+  cannula(ctx,punc-0.6*S1*cos(ANG),skin-0.6*S1*sin(ANG),ANG,small?6:Math.min(2.05*S1,14),H24);
+  ctx.fillStyle=rgba(AC,1); ctx.beginPath(); ctx.arc(tip,ride,small?2.2:3.8,0,7); ctx.fill();
+  const stripBot=wallB+(small?4:26);
+  const plx=punc+p*S1;
+  ctx.save(); ctx.shadowColor=rgba(AC,0.5); ctx.shadowBlur=9;
+  rl(ctx,plx,small?2:30,plx,stripBot-4,AC,small?1.6:2.4,0.95,false); ctx.restore();
+  const wx0=small?4:20, wx1=W-(small?4:20), wy0=stripBot+(small?3:16), wy1=H-(small?4:70);
+  ctx.fillStyle=rgba(SCRN,1); ctx.strokeStyle=rgba(WFRM,1); ctx.lineWidth=1;
+  ctx.beginPath(); ctx.roundRect(wx0,wy0,wx1-wx0,wy1-wy0,small?5:14); ctx.fill(); ctx.stroke();
+  const sk2=wy0+(small?7:28), S2=((wy1-(small?5:14))-sk2)/8.5, cx=(wx0+wx1)/2;
+  glowline(ctx,wx0+(small?3:10),sk2,wx1-(small?3:10),sk2,LL,small?1.2:1.8);
+  const vcy=sk2+6.5*S2, vr=1.5*S2;
+  ctx.fillStyle=rgba(VF,1); ctx.beginPath(); ctx.arc(cx,vcy,vr,0,7); ctx.fill();
+  ctx.strokeStyle=rgba(LL,0.9); ctx.lineWidth=small?1.2:2; ctx.stroke();
+  ctx.fillStyle=rgba(AC,1); ctx.beginPath();
+  ctx.moveTo(cx-5,wy0); ctx.lineTo(cx+5,wy0); ctx.lineTo(cx,wy0+7); ctx.closePath(); ctx.fill();
+  const inSteel=p<=RUNX;
+  const dpt = p<=D/tan(ANG) ? p*tan(ANG) : p<=(D+DV)/tan(ANG) ? D+(p-D/tan(ANG))*tan(ANG) : D+DV;
+  if(!small){
+    lsText(ctx,"LONG AXIS",20,26,MONO(10),MU,0.9,"l",1.5);
+    lsText(ctx,"SKIN",W-16,skin-12,MONO(10),MU,0.9,"r",1.5);
+    lsText(ctx,"VEIN",20,wallT+15,MONO(10),MU,0.9,"l",1.5);
+    txt(ctx,"TIP",Math.min(tip,W-40),wallB+16,MONO(10),AC,0.95,"center");
+    ctx.fillStyle=rgba(AC,1); ctx.beginPath();
+    ctx.moveTo(plx-5,stripBot-2); ctx.lineTo(plx+5,stripBot-2); ctx.lineTo(plx,stripBot+5);
+    ctx.closePath(); ctx.fill();
+    lsText(ctx,"SHORT AXIS",wx0+14,wy0+18,MONO(10),MU,0.9,"l",1.5);
+    lsText(ctx,"SKIN",wx1-22,sk2-11,MONO(9),MU,0.85,"r",1.2);
+    const sxx=wx1-14;
+    for(let mm=0;mm<=8;mm++){
+      const yy=sk2+mm*S2; if(yy>wy1-8)break;
+      const maj=mm%5===0;
+      rl(ctx,sxx-(maj?9:6),yy,sxx,yy,MU,1.5,maj?0.9:0.5,false);
+      if(maj&&mm>0) txt(ctx,String(mm),sxx-13,yy+4,MONO(12),MU,0.9,"right");
+    }
+  }
+  if(inSteel){
+    const dy=sk2+dpt*S2;
+    ctx.save(); ctx.shadowColor=rgba(LL,0.55); ctx.shadowBlur=9;
+    ctx.fillStyle=rgba(LL,1); ctx.beginPath(); ctx.arc(cx,dy,small?2.4:4,0,7); ctx.fill(); ctx.restore();
+  } else if(!small){
+    lsText(ctx,"NO NEEDLE IN THIS SLICE",cx,sk2+2.6*S2,MONO(11),MU,0.85,"m",1.2);
+  }
+  if(small) return "";
+  hint(ctx,W,H,"DRAG THE PLANE");
+  const state=p<RUNX-0.8?"OVER THE SHAFT":(p<=RUNX+0.4?"OVER THE TIP":"PAST THE TIP");
+  readout(ctx,H,"WHERE THE PLANE IS",state,"");
+  return inSteel
+    ? `Scan plane ${p.toFixed(1)} millimetres from the puncture. The short axis screen shows one dot, ${dpt.toFixed(1)} millimetres deep, and it looks the same over shaft and tip.`
+    : `Scan plane ${p.toFixed(1)} millimetres from the puncture, past the tip. The needle has left the slice and the screen shows only the vein.`;
+}
+picPlanes.drag=(c,st,x,y,W,H)=>{
+  const g=planesGeom(W,H,false);
+  st.plane=clamp((x-g.punc)/g.S1,4,33.5);
+};
+function picTrackStill(ctx,W,H,c,st,small){
+  return picTrack(ctx,W,H,{marks:["m65","abs"],fixL:32,numeral:null,ctrl:[]},
+                  {angle:45},small)||"A 32 millimetre catheter with both marks shown.";
+}
+const PICS={depth:picDepth,angleTri:picAngleTri,track:picTrack,arc:picArc,
+            devices:picDevices,cross:picCross,stages:picStages,planes:picPlanes,trackStill:picTrackStill};
+const KH={depth:470,angleTri:470,arc:420,track:356,trackStill:356,stages:290,devices:424,cross:340,planes:470};
+
+/* readouts for the track cards */
+const NUMS={
+  "intraluminal":(L,a,lin)=>["IN THE VEIN",Math.round(100*lin/L)+"","%"],
+  "rule-65":(L,a,lin)=>["MIN LENGTH \u00f7 DEPTH",(1/(0.35*sin(a))).toFixed(1)+"\u00d7",""],
+  "judging-angle":(L,a,lin)=>["IN THE VEIN",Math.round(100*lin/L)+"","%"],
+  "floor-275":(L,a,lin)=>["MIN LENGTH HERE",(27.5+5/sin(a)).toFixed(1),"mm"],
+  "which-governs":(L,a,lin)=>["THE BINDING MARK",Math.max(0.65*L,27.5).toFixed(1),"mm"],
+};
+
+/* ================= plumbing ================= */
+const app=document.getElementById('app'), live=document.getElementById('live');
+const el=(t,c,x)=>{const e=document.createElement(t); if(c)e.className=c; if(x!==undefined)e.textContent=x; return e;};
+const state={};
+CARDS.forEach(c=>{ state[c.id]={}; (c.ctrl||[]).forEach(k=>{
+  const v=k.opts[0][0]; state[c.id][k.key]= k.key==="len" ? c.ctrl.find(x=>x.key==="len").opts.findIndex(o=>o[0]===v)===-1?0:k.opts.map(o=>o[0]).indexOf(v) : v; });
+  (c.ctrl||[]).forEach(k=>{ if(k.key==="len") state[c.id].len=k.opts.map(o=>o[0]).indexOf(k.opts[0][0]); });
+  if(c.numeral===undefined) c.numeral=NUMS[c.id]||null;
+});
+
+function paint(cv,card,st,small){
+ try{
+  const r=cv.getBoundingClientRect();
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const W=Math.max(1,Math.round(r.width||92)), H=Math.max(1,Math.round(r.height||56));
+  if(cv.width!==W*dpr||cv.height!==H*dpr){ cv.width=W*dpr; cv.height=H*dpr; }
+  const ctx=cv.getContext('2d'); if(!ctx) return "";
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  return PICS[card.pic](ctx,W,H,card,st,small)||"";
+ }catch(err){ repErr((card&&card.id||'?')+': '+(err&&err.message||err)); return ""; }
+}
+
+function index(){
+  app.className='idx'; app.innerHTML='';
+  app.appendChild(el('p','eyebrow','A DICTIONARY'));
+  app.appendChild(el('h1','','Cannulation geometry'));
+  const p=el('p','intro'); p.textContent=
+    `${CARDS.length} terms, read in order. Every picture is generated on this device from the `+
+    `formulas the cards state, and responds live to the controls.`;
+  app.appendChild(p);
+  CARDS.forEach((c,i)=>{
+    const b=el('button','row-card'); b.type='button';
+    b.appendChild(el('span','row-n', (i+1<10?'0':'')+(i+1)));
+    const th=el('span','row-th'); const cvv=document.createElement('canvas'); th.appendChild(cvv);
+    b.appendChild(th);
+    const t=el('span','row-t'); t.appendChild(el('b','',c.title)); t.appendChild(el('span','',c.tldr));
+    b.appendChild(t);
+    b.addEventListener('click',()=>entry(i));
+    app.appendChild(b);
+    requestAnimationFrame(()=>paint(cvv,c,state[c.id],true));
+  });
+  const f=el('div','foot');
+  f.appendChild(el('p','',AUTHOR+' \u00b7 '+CRED));
+  f.appendChild(el('p','','Every picture is generated from published parameters. It teaches the geometry, not the procedure, and it is not a patient. '+VERSION+', built '+BUILT+'.'));
+  app.appendChild(f);
+  live.textContent='Cannulation geometry. '+CARDS.length+' terms.';
+  window.scrollTo(0,0);
+}
+
+function entry(i){
+  const c=CARDS[i], st=state[c.id];
+  app.className='ent'; app.innerHTML='';
+  const bk=el('button','bk','\u2190 All terms'); bk.type='button';
+  bk.addEventListener('click',index); app.appendChild(bk);
+  const eb=el('p','eyebrow',`TERM ${i+1<10?'0':''}${i+1} \u00b7 ${(c.topic||'').toUpperCase()}`);
+  eb.style.marginTop='8px'; app.appendChild(eb);
+  app.appendChild(el('h1','',c.title));
+  const win=el('div','win'); const cvv=document.createElement('canvas');
+  cvv.setAttribute('role','img'); cvv.style.height='min(58vh,'+(KH[c.pic]||470)+'px)';
+  win.appendChild(cvv); app.appendChild(win);
+  let anim=0;
+  const redraw=()=>{ const a=paint(cvv,c,st,false); cvv.setAttribute('aria-label',a); return a; };
+  /* drag */
+  const dragFn=PICS[c.pic].drag;
+  if(dragFn && !(c.ctrl||[]).every(k=>k.key==="len"&&c.pic!=="arc")){
+    let on=false;
+    cvv.addEventListener('pointerdown',e=>{ if(!dragFn)return;
+      on=true; cvv.setPointerCapture(e.pointerId); move(e); });
+    const move=e=>{ if(!on)return;
+      const r=cvv.getBoundingClientRect();
+      dragFn(c,st,e.clientX-r.left,e.clientY-r.top,r.width,r.height);
+      cancelAnimationFrame(anim); redraw(); syncChips(); };
+    cvv.addEventListener('pointermove',move);
+    cvv.addEventListener('pointerup',()=>{ if(!on)return; on=false;
+      live.textContent=cvv.getAttribute('aria-label'); });
+    cvv.tabIndex=0;
+    cvv.addEventListener('keydown',e=>{
+      if(!e.key.startsWith('Arrow')) return; e.preventDefault();
+      const mag=e.shiftKey?5:1, up=(e.key==='ArrowRight'||e.key==='ArrowUp');
+      if(c.pic==='depth') st.press=clamp((st.press??0)+((e.key==='ArrowDown'||e.key==='ArrowRight')?1:-1)*0.05*mag,0,1);
+      else if(c.pic==='stages') st.stage=clamp((st.stage??0)+(up?1:-1)*0.1*mag,0,2);
+      else if(c.pic==='planes') st.plane=clamp((st.plane??14)+(up?1:-1)*0.5*mag,4,33.5);
+      else st.angle=clamp((st.angle??45)+(up?1:-1)*mag,20,60);
+      cancelAnimationFrame(anim); redraw(); syncChips();
+      live.textContent=cvv.getAttribute('aria-label');
+    });
+  }
+  const rows=[];
+  const syncChips=()=>{ (c.ctrl||[]).forEach((k,ki)=>{
+    [...rows[ki].children].forEach((b,j)=>{
+      const v=k.opts[j][0];
+      const cur= k.key==="len" ? st.len===j :
+                 typeof st[k.key]==="number" ? Math.abs(st[k.key]-v)<0.51 : st[k.key]===v;
+      b.setAttribute('aria-pressed',cur?'true':'false'); }); }); };
+  (c.ctrl||[]).forEach((k,ki)=>{
+    const kl=el('p','eyebrow klab',k.k.toUpperCase()); app.appendChild(kl);
+    const row=el('div','krow'); row.setAttribute('role','group'); row.setAttribute('aria-label',k.k);
+    k.opts.forEach((o,j)=>{
+      const b=el('button','',o[1]); b.type='button';
+      b.addEventListener('click',()=>{
+        const from={...st};
+        if(k.key==="len") st.len=j; else st[k.key]=o[0];
+        const to={...st};
+        syncChips();
+        const reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const animatable=["press","angle","stage","plane"].includes(k.key);
+        if(reduced||!animatable){ redraw(); }
+        else{
+          const t0=performance.now(), dur=420, e=u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
+          const step=now=>{ const u=Math.min(1,(now-t0)/dur);
+            st[k.key]=from[k.key]+(to[k.key]-from[k.key])*e(u);
+            redraw();
+            if(u<1) anim=requestAnimationFrame(step); else st[k.key]=to[k.key]; };
+          cancelAnimationFrame(anim); anim=requestAnimationFrame(step);
+        }
+        live.textContent=k.k+': '+o[1]+'. '+cvv.getAttribute('aria-label');
+      });
+      row.appendChild(b);
+    });
+    rows.push(row); app.appendChild(row);
+  });
+  syncChips();
+  const one=el('div','oneline'); one.appendChild(el('p','eyebrow','IN ONE LINE'));
+  one.appendChild(el('p','',c.tldr)); app.appendChild(one);
+  app.appendChild(el('p','lede',c.lede));
+  c.body.forEach(b=>{ if(b.h) app.appendChild(el('h2','',b.h));
+    else if(b.tab){ const tb=el('div','dtab'); tb.setAttribute('role','table');
+      const NUM=/^[\d.]+ ?(mm|%|\u00b0|\u00d7)?$/;
+      b.tab.forEach((row,ri)=>{ const tr=el('div',ri?'dtr':'dtr dth'); tr.setAttribute('role','row');
+        const a=el('span','dl',row[0]); a.setAttribute('role',ri?'cell':'columnheader');
+        const v=el('span',NUM.test(row[1])?'dv2':'dvp',row[1]);
+        v.setAttribute('role',ri?'cell':'columnheader');
+        tr.appendChild(a); tr.appendChild(v); tb.appendChild(tr); });
+      app.appendChild(tb); }
+    else app.appendChild(el('p','body',b.p)); });
+  const s=el('div','src'); s.appendChild(el('p','eyebrow','SOURCES'));
+  c.src.forEach(x=>s.appendChild(el('p','',x))); app.appendChild(s);
+  if(c.links){ const lr=el('div','');
+    c.links.forEach(([tt,h])=>{ const a=document.createElement('a'); a.className='plink';
+      a.href=h; a.target='_blank'; a.rel='noopener'; a.textContent=tt+' \u2192'; lr.appendChild(a); });
+    app.appendChild(lr); }
+  const nav=el('div','nav');
+  const mk=(j,kind,cls)=>{ const b=el('button',cls); b.type='button';
+    b.appendChild(el('span','k',kind));
+    b.appendChild(el('span','v', j===null?'All terms':CARDS[j].title));
+    b.addEventListener('click',()=> j===null?index():entry(j)); return b; };
+  nav.appendChild(mk(i>0?i-1:null,'\u2190 PREVIOUS',''));
+  nav.appendChild(mk(i<CARDS.length-1?i+1:null,'NEXT \u2192','r'));
+  app.appendChild(nav);
+  requestAnimationFrame(redraw);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>redraw());
+  live.textContent=c.title+', term '+(i+1)+' of '+CARDS.length+'. '+c.tldr;
+  window.scrollTo(0,0);
+}
+window.addEventListener('resize',()=>{});
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(index); else index();
+</script>
+</body>
+</html>

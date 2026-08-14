@@ -7,7 +7,7 @@
 <meta name="author" content="Dr Ganesh Sivasankara">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Cannulation">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-180.png">
@@ -38,11 +38,16 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 button{font:inherit;color:inherit;text-align:inherit;}
 html,body{margin:0;background:var(--cream);color:var(--ink);}
-body{font-family:var(--body);-webkit-font-smoothing:antialiased;}
+body{font-family:var(--body);-webkit-font-smoothing:antialiased;
+  /* viewport-fit=cover extends the page under the status bar and the notch. Without these
+     insets the top row of every screen lands in the strip iOS reserves, so the back button
+     is untappable in portrait on a phone and returns in landscape. */
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);}
 main{max-width:620px;margin:0 auto;padding:20px 16px 60px;}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--dim);margin:0;}
-.bk{background:none;border:0;padding:8px 8px 8px 0;margin:-8px 0 -8px;cursor:pointer;
+.bk{background:none;border:0;padding:0 14px 0 0;margin:0 0 -5px;cursor:pointer;
+  display:inline-flex;align-items:center;min-height:44px;
   color:var(--amber);font-family:var(--body);font-size:15px;}
 .bk:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 h1{font-family:var(--disp);font-weight:700;letter-spacing:0;margin:6px 0 0;line-height:.98;}
@@ -135,7 +140,7 @@ window.addEventListener('unhandledrejection',e=>{
 });
 const CARDS = __CARDS__;
 const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
-const VERSION="v19", BUILT="14 August 2026";
+const VERSION="v20", BUILT="14 August 2026";
 
 /* ================= geometry ================= */
 const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));

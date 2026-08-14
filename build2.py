@@ -53,6 +53,12 @@ g("masked script errors stay silent","Script error" in out and "masked=" in out)
 g("attributable paint errors still report","repErr((e.message||" in out)
 print("=== B5a table block ===")
 g("ledger-table renderer present","b.tab" in out and "dv2" in out and "dvp" in out)
+# viewport-fit=cover is only safe if the insets are honoured, or the top row of every
+# screen sits under the status bar where iOS eats the taps (v20).
+g("viewport-fit=cover is matched by safe-area insets",
+  ("viewport-fit=cover" not in out) or all(x in out for x in
+   ("env(safe-area-inset-top)","env(safe-area-inset-left)","env(safe-area-inset-right)")))
+g("back button meets the 44px touch target", ".bk{" in out and "min-height:44px" in out.split(".bk{")[1][:220])
 from cards import CARDS as _C
 _nt=sum(1 for c in _C for bl in c["body"] if bl.get("tab"))
 g("tab blocks declared where expected", _nt>=3, f"{_nt} tab blocks")

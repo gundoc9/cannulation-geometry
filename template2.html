@@ -69,6 +69,8 @@ h1{font-family:var(--disp);font-weight:700;letter-spacing:0;margin:6px 0 0;line-
 .win{border-radius:18px;overflow:hidden;background:#0D181B;margin-top:14px;line-height:0;
   box-shadow:0 6px 22px rgba(20,24,25,.20);}
 .win canvas{display:block;width:100%;height:min(58vh,470px);touch-action:none;}
+.win,.win canvas{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+body.dragging,body.dragging *{-webkit-user-select:none;user-select:none;}
 .win canvas:focus-visible{outline:3px solid var(--amber);outline-offset:-3px;}
 .krow{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
 .krow button{min-height:44px;padding:0 15px;border-radius:22px;cursor:pointer;
@@ -170,7 +172,7 @@ window.addEventListener('unhandledrejection',e=>{
 });
 const CARDS = __CARDS__;
 const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
-const VERSION="v21", BUILT="24 September 2026";
+const VERSION="v22", BUILT="24 September 2026";
 
 /* ================= geometry ================= */
 const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));
@@ -858,14 +860,17 @@ function entry(i){
   const dragFn=PICS[c.pic].drag;
   if(dragFn && !(c.ctrl||[]).every(k=>k.key==="len"&&c.pic!=="arc")){
     let on=false;
-    cvv.addEventListener('pointerdown',e=>{ if(!dragFn)return;
+    cvv.addEventListener('touchstart',e=>e.preventDefault(),{passive:false});   // no long-press select or copy
+    cvv.addEventListener('pointerdown',e=>{ if(!dragFn)return; document.body.classList.add('dragging');
       on=true; cvv.setPointerCapture(e.pointerId); move(e); });
     const move=e=>{ if(!on)return;
       const r=cvv.getBoundingClientRect();
       dragFn(c,st,e.clientX-r.left,e.clientY-r.top,r.width,r.height);
       cancelAnimationFrame(anim); redraw(); syncChips(); };
     cvv.addEventListener('pointermove',move);
-    cvv.addEventListener('pointerup',()=>{ if(!on)return; on=false;
+    const end=()=>{ document.body.classList.remove('dragging'); };
+    cvv.addEventListener('pointercancel',()=>{ on=false; end(); });
+    cvv.addEventListener('pointerup',()=>{ end(); if(!on)return; on=false;
       live.textContent=cvv.getAttribute('aria-label'); });
     cvv.tabIndex=0;
     cvv.addEventListener('keydown',e=>{

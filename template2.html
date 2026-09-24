@@ -112,6 +112,36 @@ p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
 .foot p{font-size:12.5px;line-height:1.55;color:var(--dim);margin:0 0 5px;}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
   white-space:nowrap;border:0;clip:rect(0 0 0 0);}
+/* One file, three layouts, chosen by the screen it is opened on: the phone column above;
+   a wider single column on a tablet held upright; the figure beside the text on wide screens.
+   A phone turned sideways has too little height for either and keeps the phone column. */
+@media (min-width:700px) and (min-height:600px){
+  main{max-width:760px;padding:28px 32px 72px;}
+  .idx h1{font-size:56px;}
+  .ent h1{font-size:50px;}
+  .intro{font-size:17px;max-width:640px;}
+  .idx .grid{display:flex;flex-wrap:wrap;margin-right:-12px;}
+  .idx .grid .row-card{width:calc(50% - 12px);margin-right:12px;margin-bottom:12px;}
+  .row-th{flex:0 0 128px;height:78px;}
+  .row-th canvas{width:128px;height:78px;}
+  .row-t b{font-size:21px;}
+  .row-t span{font-size:13px;}
+  .ent .txt{max-width:640px;}
+  .oneline p,p.body{font-size:17px;}
+  .lede{font-size:18px;}
+  .foot{max-width:640px;}
+}
+@media (min-width:980px) and (min-height:600px){
+  main{max-width:1320px;padding:32px 40px 80px;}
+  .ent .cols{display:flex;align-items:flex-start;}
+  .ent .fig{flex:1 1 auto;min-width:0;margin-right:48px;
+    position:-webkit-sticky;position:sticky;top:20px;top:calc(20px + env(safe-area-inset-top));}
+  .ent .txt{flex:0 0 38%;min-width:360px;max-width:460px;}
+  .ent .txt .oneline{margin-top:14px;}
+}
+@media (min-width:1200px) and (min-height:600px){
+  .idx .grid .row-card{width:calc(33.333% - 12px);}
+}
 </style>
 </head>
 <body>
@@ -140,7 +170,7 @@ window.addEventListener('unhandledrejection',e=>{
 });
 const CARDS = __CARDS__;
 const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
-const VERSION="v20", BUILT="14 August 2026";
+const VERSION="v21", BUILT="24 September 2026";
 
 /* ================= geometry ================= */
 const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));
@@ -209,7 +239,7 @@ function handle(ctx,x,y,r=11){
 function cannula(ctx,x,y,ang,h,col,alpha=1){
   /* Real-device anatomy, per the user's photos: the gauge colour is the FRONT
      CONE tapering into the catheter; behind it a clear flashback chamber, then
-     the wider vented plug with grip ridges. Wings sit at the junction.
+     the wider vented plug with grip ridges. The wings are at the junction.
      (x,y) is where the catheter leaves the cone; the glyph extends back. */
   if(!(h>5)){ rl(ctx,x-6*cos(ang),y-6*sin(ang),x,y,col,Math.max(3,h*0.9),alpha); return; }
   ctx.save(); ctx.translate(x,y); ctx.rotate(rad(ang)); ctx.globalAlpha=alpha;
@@ -245,6 +275,12 @@ function txt(ctx,s,x,y,font,col,a=1,align="left",base="alphabetic"){
   ctx.font=font; ctx.fillStyle=rgba(col,a); ctx.textAlign=align; ctx.textBaseline=base;
   ctx.fillText(s,x,y); ctx.textAlign="left"; ctx.textBaseline="alphabetic";
 }
+/* a label that may sit across a faint line: a thin rim of field colour keeps it legible */
+function htxt(ctx,s,x,y,font,col,a=1,align="left",base="alphabetic"){
+  ctx.save(); ctx.font=font; ctx.textAlign=align; ctx.textBaseline=base;
+  ctx.lineWidth=4; ctx.lineJoin="round"; ctx.strokeStyle=rgba(F0,0.92); ctx.strokeText(s,x,y);
+  ctx.restore(); txt(ctx,s,x,y,font,col,a,align,base);
+}
 function scaleRight(ctx,W,H,x,y0,S,maxMm){
   rl(ctx,x,0,x,H,MU,1,0.45,false);
   for(let mm=0;mm<=maxMm;mm++){
@@ -254,10 +290,14 @@ function scaleRight(ctx,W,H,x,y0,S,maxMm){
     if(maj&&mm>0) txt(ctx,String(mm),x-7,y+3.5,MONO(12),MU,0.9,"right");
   }
 }
+let HINTX=null;                                     // left edge of this frame's pill, if any
 function readout(ctx,H,label,big,unit){
   if(!big) return;
   lsText(ctx,label,20,H-52,MONO(10),MU,0.95,"l",1.5);
-  txt(ctx,big,20,H-14,DISP(34),AC);
+  let fs=34; ctx.font=DISP(fs); const w0=ctx.measureText(big).width;
+  ctx.font=MONO(12); const uw=unit?ctx.measureText(unit).width+5:0;
+  if(HINTX!==null){ const room=HINTX-12-20-uw; if(w0>room&&room>0) fs=Math.max(22,34*room/w0); }
+  txt(ctx,big,20,H-14,DISP(fs),AC);
   const bw=ctx.measureText(big).width;
   txt(ctx,unit,25+bw,H-15,MONO(12),MU,0.9);
 }
@@ -267,6 +307,7 @@ function hint(ctx,W,H,s){
   ctx.fillStyle=rgba(F1,0.85); ctx.strokeStyle=rgba(MU,0.4); ctx.lineWidth=1;
   ctx.beginPath(); ctx.roundRect(x,y,w,22,11); ctx.fill(); ctx.stroke();
   lsText(ctx,s,x+13,y+15,MONO(10),AC,1,"l",0.8);
+  HINTX=x;
   return x;
 }
 if(!CanvasRenderingContext2D.prototype.roundRect){
@@ -285,6 +326,15 @@ function picDepth(ctx,W,H,c,st,small){
   const top=small?4:16, S=(H-top-(small?6:46))/(D0+OD+1.2);
   const backY=top+(small?10:34)+(D0+OD)*S, face=backY-(read+2*ry)*S, cx=W*0.47;
   ctx.drawImage(fieldImg(W,H),0,0);
+  if(!small){                                     // tissue between skin and vein: it thins as you press
+    const fwy=backY-2*ry*S;
+    for(const f of [0.3,0.7]){
+      const y=face+(fwy-face)*f;
+      ctx.strokeStyle=rgba(LL,0.15); ctx.lineWidth=1.1; ctx.beginPath();
+      for(let x=0;x<=W-46;x+=6){ const yy=y+1.5*Math.sin(x*0.045+f*9); x===0?ctx.moveTo(x,yy):ctx.lineTo(x,yy); }
+      ctx.stroke();
+    }
+  }
   ctx.fillStyle=rgba(VF,1);
   ctx.beginPath(); ctx.ellipse(cx,backY-ry*S,rx*S,ry*S,0,0,7); ctx.fill();
   ctx.strokeStyle=rgba(LL,0.9); ctx.lineWidth=small?1.2:1.9; ctx.stroke();
@@ -303,11 +353,12 @@ function picDepth(ctx,W,H,c,st,small){
   }
   glowline(ctx,0,face,W-(small?0:46),face,LL,small?1.4:2.4);
   if(small) return "";
+  lsText(ctx,"SKIN",34,face+18,MONO(10),MU,0.9,"l",1.5);
   scaleRight(ctx,W,H,W-28,face,S,9);
   const fw=backY-2*ry*S, cyv=backY-ry*S, ty=fw+(cyv-fw)*t, val=(ty-face)/S;
   rl(ctx,cx,face,cx,ty,AC,1.7,0.6);
   for(const y of [face,ty]) rl(ctx,cx-6,y,cx+6,y,AC,2.6);
-  txt(ctx,val.toFixed(1)+" mm",cx+13,(face+ty)/2+4,MONO(12),AC);
+  htxt(ctx,val.toFixed(1)+" mm",cx+13,(face+ty)/2+4,MONO(12),AC);
   hint(ctx,W,H,"DRAG THE PROBE");
   readout(ctx,H,"DEPTH FROM PROBE FACE",val.toFixed(1),"mm");
   return `Depth reads ${val.toFixed(1)} millimetres. The vein is fixed; the probe has moved.`;
@@ -315,20 +366,21 @@ function picDepth(ctx,W,H,c,st,small){
 picDepth.drag=(c,st,x,y,W,H)=>{ st.press=clamp((y-70)/(H*0.34),0,1); };
 
 function angGeom(st,W,H,small){
-  const ang=clamp(st.angle??45,20,60), D=5;
+  const ang=clamp(st.angle??45,20,60), D=5, VB=3;           // VB: the vein, 3 mm across as elsewhere
   let skin=small?10:48;
-  const Sv=small?7:(H*0.67-skin)/D;
+  const Sv=small?7:(H-130)/(D+VB);                          // the back wall must clear the readout
   const S=Math.min(Sv,(W-(small?24:104))/(D/tan(ang)));   // shrink the triangle, keep the shape
-  if(!small) skin=Math.min(48+Math.max(0,(Sv-S))*D/2, H-155-D*S);   // centre when width-bound, original bottom budget kept
+  if(!small) skin=Math.min(48+Math.max(0,(Sv-S))*(D+VB)/2, H-82-(D+VB)*S);   // centre when width-bound
   const punc=small?10:52;
-  return {ang,D,skin,S,punc,vt:skin+D*S,tipx:punc+D/tan(ang)*S};
+  return {ang,D,VB,skin,S,punc,vt:skin+D*S,tipx:punc+D/tan(ang)*S};
 }
 function picAngleTri(ctx,W,H,c,st,small){
-  const {ang,D,skin,S,punc}=angGeom(st,W,H,small);
+  const {ang,D,VB,skin,S,punc}=angGeom(st,W,H,small);
   ctx.drawImage(fieldImg(W,H),0,0);
-  const vt=skin+D*S;
-  ctx.fillStyle=rgba(VF,1); ctx.fillRect(0,vt,W,H-vt);
+  const vt=skin+D*S, vb=small?H:vt+VB*S;
+  ctx.fillStyle=rgba(VF,1); ctx.fillRect(0,vt,W,vb-vt);
   rl(ctx,0,vt,W,vt,LL,small?1.2:1.8,0.85,false);
+  if(!small) rl(ctx,0,vb,W,vb,LL,1.6,0.55,false);
   glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
   const tipx=punc+D/tan(ang)*S;
   if(!small){
@@ -383,6 +435,11 @@ function picTrack(ctx,W,H,c,st,small){
   glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
   const hl=(c.marks||[]).includes("lumen"), inCol=hl?AC:LL;
   const dev=G.DEV.find(d=>d.L===L)||G.DEV[2], hcol=dev.g==="24G"?H24:H22;
+  if(c.fan&&!small) for(const o of (c.ctrl[0].opts)){         // each reading of the same hand
+    const ga=o[0]; if(Math.abs(ga-ang)<0.5) continue;
+    const gex=punc+g.D/tan(ga)*S, gix=gex+g.dv/tan(ga)*S;
+    rl(ctx,punc,skin,gex,wallT,LL,2.2,0.24); rl(ctx,gex,wallT,gix,ride,LL,2.2,0.24);
+  }
   cannula(ctx,punc-0.6*S*cos(ang),skin-0.6*S*sin(ang),ang,
           small?Math.min(2.05*S,7):Math.min(2.05*S,22),hcol);
   ctx.save(); ctx.shadowColor=rgba(LL,0.4); ctx.shadowBlur=8;
@@ -402,9 +459,9 @@ function picTrack(ctx,W,H,c,st,small){
     const ok=mm<=lin, col=ok?OKC:NOC, [x,y,a0]=at(mm);
     const nx=cos(a0+90),ny=sin(a0+90);
     rl(ctx,x-nx*9,y-ny*9,x+nx*9,y+ny*9,col,3);
-    if(above){ txt(ctx,lab,x-nx*9,y-ny*9-7,MONO(12),col,1,"center"); }
+    if(above){ htxt(ctx,lab,x-nx*9,y-ny*9-7,MONO(12),col,1,"center"); }
     else{ const ly=wallB+20; rl(ctx,x,y+10,x,ly-9,col,1.2,0.55,false);
-      txt(ctx,lab,Math.min(Math.max(x,26),W-44),ly,MONO(12),col,1,"center","middle"); }
+      htxt(ctx,lab,Math.min(Math.max(x,26),W-44),ly,MONO(12),col,1,"center","middle"); }
     return ok;
   };
   let note=[], vy=wallB+36;
@@ -424,8 +481,8 @@ function picTrack(ctx,W,H,c,st,small){
     if(beyond){ txt(ctx,"27.5 mm is beyond the hub",20,vy,MONO(12),NOC); }
     else{ const ok=mark(27.5,"27.5",false);
       txt(ctx,`27.5 mm   ${ok?"inside":"outside the vein"}`,20,vy,MONO(12),ok?OKC:NOC);
-      note.push(ok?"floor met":"floor not met"); }
-    if(beyond) note.push("shorter than the floor");
+      note.push(ok?"27.5 mm inside":"27.5 mm not inside"); }
+    if(beyond) note.push("shorter than 27.5 mm");
     vy+=26;
   }
   const sx=W-28;
@@ -495,15 +552,22 @@ picArc.drag=(c,st,x,y,W,H)=>{ st.angle=clamp(Math.atan2(y-46,x-52)/Math.PI*180,2
 function picDevices(ctx,W,H,c,st,small){
   const sel=st.len??2, S=(W-(small?14:70))/56.5, x0=small?6:26;
   ctx.drawImage(fieldImg(W,H),0,0);
-  const rows=[...Array(4)].map((_,i)=>(small?8:60)+i*(small?12:68));
+  const fl=!!c.flow&&!small, gap=small?12:(fl?84:68);
+  const rows=[...Array(4)].map((_,i)=>(small?8:60)+i*gap);
+  const FMAX=Math.max(...G.DEV.map(d=>d.flow)), FS=36*S/FMAX;       // flow bars: the fastest spans 36 mm of width
   G.DEV.forEach((d,i)=>{
     const y=rows[i], on=i===sel, a=on?1:0.45, col=d.g==="24G"?H24:H22;
     cannula(ctx,x0+6.5*S,y,0,6.5*S/3.05,col,a);
     rl(ctx,x0+6.5*S,y,x0+(6.5+d.L)*S,y,LL,Math.max(small?2:3.4,d.od*S*0.9),a);
-    if(!small) lsText(ctx,`${d.g} \u00b7 ${d.L} mm \u00b7 ${d.od} mm bore`,x0,y-16,MONO(10),on?col:MU,on?1:0.8,"l",1.0);
+    if(!small) lsText(ctx,`${d.g} \u00b7 ${d.L} mm \u00b7 ${d.od} mm bore`,x0,y-Math.max(16,0.86*6.5*S/3.05+6),MONO(10),on?col:MU,on?1:0.8,"l",1.0);   // clear of the wings at any width
+    if(fl){
+      const by=y+16, bx=x0+6.5*S, bl=d.flow*FS;
+      ctx.fillStyle=rgba(on?AC:MU,on?0.9:0.42); ctx.beginPath(); ctx.roundRect(bx,by-3.5,bl,7,3.5); ctx.fill();
+      txt(ctx,`${d.flow} mL/min`,bx+bl+8,by+4,MONO(10),on?AC:MU,on?1:0.8);
+    }
   });
   if(small) return "";
-  const ay=rows[3]+40;
+  const ay=rows[3]+(fl?50:40);
   rl(ctx,x0+6.5*S,ay,x0+(6.5+50)*S,ay,MU,1.4,0.6,false);
   for(let mm=0;mm<=50;mm+=5){
     const xx=x0+(6.5+mm)*S, maj=mm%10===0;
@@ -520,7 +584,9 @@ function picDevices(ctx,W,H,c,st,small){
 function picCross(ctx,W,H,c,st,small){
   const thr=(st.thr??45)/100, minv=0.9/thr;
   ctx.drawImage(fieldImg(W,H),0,0);
-  const S=small?12:52, cx=small?W*0.5:(84+(0.9/0.33/2)*S), cy=small?H*0.5:H*0.40;
+  const gx=W-152;                                        // the gauge column
+  const S=small?12:Math.min(52,(gx-13-84)/(0.9/0.33));    // the largest vein must end clear of the dots
+  const cx=small?W*0.5:(84+(0.9/0.33/2)*S), cy=small?H*0.5:H*0.40;
   const rV=minv/2*S, rC=0.45*S;
   ctx.fillStyle=rgba(VF,1); ctx.beginPath(); ctx.arc(cx,cy,rV,0,7); ctx.fill();
   ctx.strokeStyle=rgba(LL,0.9); ctx.lineWidth=small?1.2:2; ctx.stroke();
@@ -536,7 +602,6 @@ function picCross(ctx,W,H,c,st,small){
     rl(ctx,xd+8,yy,cx-rV+4,yy,MU,1.1,0.45,false);
   }
   txt(ctx,minv.toFixed(1)+" mm",xd-12,cy+4,MONO(12),AC,1,"right");
-    const gx=W-152;
   lsText(ctx,`MIN VEIN \u00b7 \u2264${Math.round(thr*100)}%`,gx,54,MONO(10),MU,0.9,"l",1.2);
   [["24G",0.7,H24],["22G",0.9,H22],["20G",1.1,GREYG],["18G",1.3,GREYG]]
   .forEach(([g,od,col],i)=>{
@@ -545,9 +610,11 @@ function picCross(ctx,W,H,c,st,small){
     txt(ctx,g,gx+34,y+4,MONO(12),LL,0.95);
     txt(ctx,(od/thr).toFixed(1),gx+86,y+4,MONO(12),LL);
   });
-  ctx.font=MONO(10);
-  const capw=ctx.measureText("SMALLEST VEIN THAT PASSES").width*1.34;
-  lsText(ctx,"SMALLEST VEIN THAT PASSES",Math.min(cx,gx-16-capw/2),cy+rV+22,MONO(10),MU,0.85,"m",1.1);
+  ctx.font=MONO(10);                                     // caption under the vein, never past an edge
+  const lw=s=>{ let w=0; for(const ch of s) w+=ctx.measureText(ch).width+1.1; return w-1.1; };
+  const put=(s,y)=>{ const w=lw(s); lsText(ctx,s,clamp(cx,12+w/2,gx-16-w/2),y,MONO(10),MU,0.85,"m",1.1); };
+  const cap="SMALLEST VEIN THAT PASSES", capY=cy+rV+22;
+  if(lw(cap)<=gx-28) put(cap,capY); else { put("SMALLEST VEIN",capY); put("THAT PASSES",capY+14); }
   readout(ctx,H,"MIN VEIN FOR A 22G",minv.toFixed(1),"mm");
   return `Threshold ${Math.round(thr*100)} per cent. A 22G needs a ${minv.toFixed(1)} millimetre vein.`;
 }
@@ -574,6 +641,16 @@ function picStages(ctx,W,H,c,st,small){
   rl(ctx,0,wallT,W,wallT,LL,small?1.2:1.8,0.85,false);
   rl(ctx,0,wallB,W,wallB,LL,small?1:1.6,0.55,false);
   glowline(ctx,0,skin,W,skin,LL,small?1.4:2.2);
+  if(!small){
+    const my=wallT+1.5*S;                                   // the middle of the lumen
+    ctx.save(); ctx.setLineDash([5,6]); rl(ctx,86,my,W,my,LL,1.3,0.42,false); ctx.restore();
+    lsText(ctx,"MIDLINE",20,my+3.5,MONO(10),MU,0.75,"l",1.2);
+    if(u>1){                                                // where the tip was at entry
+      const gx=P+s2*cos(ENT)*S, gy=skin+s2*sin(ENT)*S;
+      rl(ctx,P,skin,gx,gy,LL,3,0.26);
+      ctx.fillStyle=rgba(LL,0.34); ctx.beginPath(); ctx.arc(gx,gy,3.2,0,7); ctx.fill();
+    }
+  }
   cannula(ctx,P-0.6*S*cos(A),skin-0.6*S*sin(A),A,small?7:Math.min(2.05*S,22),H24);
   ctx.save(); ctx.shadowColor=rgba(LL,0.4); ctx.shadowBlur=8;
   rl(ctx,P,skin,tx,ty,LL,small?2.6:4.5); ctx.restore();
@@ -581,22 +658,16 @@ function picStages(ctx,W,H,c,st,small){
   if(small) return "";
   lsText(ctx,"SKIN",W-16,skin-12,MONO(10),MU,0.9,"r",1.5);
   lsText(ctx,"VEIN",20,wallT+15,MONO(10),MU,0.9,"l",1.5);
-  hint(ctx,W,H,"DRAG THE TIP");
+  hint(ctx,W,H,"DRAG ACROSS");
   readout(ctx,H,"SHAFT ANGLE",String(Math.round(A))+"\u00b0","");
   const names=["approaching the vein","just through the wall","a small advance, then the drop"];
   return `Stage ${Math.round(u)+1} of 3, ${names[Math.round(u)]}. Shaft at ${Math.round(A)} degrees, tip ${d.toFixed(1)} millimetres deep.`;
 }
 picStages.drag=(c,st,x,y,W,H)=>{
-  const D=5,ENT=30,dIn=0.30,dAdv=1.20;
-  const s1=0.80*D/sin(ENT), s2=(D+dIn)/sin(ENT), s3=(D+dIn+dAdv)/sin(ENT);
-  const A3=Math.asin((D+0.60)/s3)/Math.PI*180;
-  const S=(W-56)/(s3*cos(A3)+6.3*cos(A3)+0.8), P=16+6.3*cos(A3)*S;
-  const r=clamp((x-P)/S, s1*cos(ENT), s3*cos(A3));
-  const r1=s2*cos(ENT), r15=s3*cos(ENT);
-  if(r<=r1) st.stage=(r-s1*cos(ENT))/(r1-s1*cos(ENT));
-  else if(r<=r15) st.stage=1+0.5*(r-r1)/(r15-r1);
-  else { const A=Math.acos(clamp(r/s3,-1,1))/Math.PI*180; st.stage=1.5+0.5*(ENT-A)/(ENT-A3); }
-  st.stage=clamp(st.stage,0,2);
+  /* The manoeuvre is a few millimetres of tip travel, too little to follow with a finger,
+     so the whole width of the drawing is the whole manoeuvre: left edge at the skin,
+     right edge flattened, the advance and the pivot each given a quarter. */
+  st.stage=clamp((x-24)/(W-48)*2,0,2);
 };
 function planesGeom(W,H,small){
   const ANG=30,D=5,DV=1.5,L=32;
@@ -697,6 +768,25 @@ const NUMS={
 const app=document.getElementById('app'), live=document.getElementById('live');
 const el=(t,c,x)=>{const e=document.createElement(t); if(c)e.className=c; if(x!==undefined)e.textContent=x; return e;};
 const state={};
+let refresh=null;
+/* a web address per term, from its title: #judging-the-angle */
+CARDS.forEach(c=>{ c.slug=c.title.toLowerCase().replace(/%/g,' percent').replace(/[^a-z0-9]+/g,'-')
+  .replace(/^-+|-+$/g,'').replace(/^the-/,''); });
+/* which of the three layouts the stylesheet chose, read back from the page itself */
+const tier=()=>{ const mw=parseFloat(getComputedStyle(app).maxWidth)||620; return mw>1000?2:mw>700?1:0; };
+/* Size a card's drawing. Phone: exactly as before. Wider: drawn at no more than the widest
+   width the renderers are tested at (588) and scaled up, labels with it, never taller than
+   the screen leaves room for with the controls in view. */
+function fit(cv,kh){
+  const win=cv.parentNode, fig=win.parentNode;
+  if(tier()===0){ cv._z=1; win.style.maxWidth=''; cv.style.height='min(58vh,'+kh+'px)'; return; }
+  const colW=Math.max(1,fig.getBoundingClientRect().width), vh=window.innerHeight||0;
+  let z=Math.max(1,colW/588);
+  const extra=Math.max(0,fig.getBoundingClientRect().height-cv.getBoundingClientRect().height);
+  if(vh){ const cap=vh-extra-60; if(kh*z>cap) z=Math.max(1,cap/kh); }
+  cv._z=z; win.style.maxWidth=Math.round(Math.min(colW,588*z))+'px';
+  cv.style.height=Math.round(kh*z)+'px';
+}
 CARDS.forEach(c=>{ state[c.id]={}; (c.ctrl||[]).forEach(k=>{
   const v=k.opts[0][0]; state[c.id][k.key]= k.key==="len" ? c.ctrl.find(x=>x.key==="len").opts.findIndex(o=>o[0]===v)===-1?0:k.opts.map(o=>o[0]).indexOf(v) : v; });
   (c.ctrl||[]).forEach(k=>{ if(k.key==="len") state[c.id].len=k.opts.map(o=>o[0]).indexOf(k.opts[0][0]); });
@@ -707,10 +797,14 @@ function paint(cv,card,st,small){
  try{
   const r=cv.getBoundingClientRect();
   const dpr=Math.min(2,window.devicePixelRatio||1);
-  const W=Math.max(1,Math.round(r.width||92)), H=Math.max(1,Math.round(r.height||56));
-  if(cv.width!==W*dpr||cv.height!==H*dpr){ cv.width=W*dpr; cv.height=H*dpr; }
+  const cw=r.width||92, ch=r.height||56;
+  const z=small?Math.max(1,cw/92):(cv._z||1);            // thumbnails are drawn at 92 x 56 and scaled
+  const W=Math.max(1,Math.round(cw/z)), H=Math.max(1,Math.round(ch/z));
+  const bw=z===1?W*dpr:Math.round(cw*dpr), bh=z===1?H*dpr:Math.round(ch*dpr);
+  if(cv.width!==bw||cv.height!==bh){ cv.width=bw; cv.height=bh; }
   const ctx=cv.getContext('2d'); if(!ctx) return "";
-  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,H);
+  ctx.setTransform(dpr*z,0,0,dpr*z,0,0); ctx.clearRect(0,0,W,H);
+  HINTX=null;
   return PICS[card.pic](ctx,W,H,card,st,small)||"";
  }catch(err){ repErr((card&&card.id||'?')+': '+(err&&err.message||err)); return ""; }
 }
@@ -723,6 +817,7 @@ function index(){
     `${CARDS.length} terms, read in order. Every picture is generated on this device from the `+
     `formulas the cards state, and responds live to the controls.`;
   app.appendChild(p);
+  const grid=el('div','grid'); app.appendChild(grid); const thumbs=[];
   CARDS.forEach((c,i)=>{
     const b=el('button','row-card'); b.type='button';
     b.appendChild(el('span','row-n', (i+1<10?'0':'')+(i+1)));
@@ -731,9 +826,10 @@ function index(){
     const t=el('span','row-t'); t.appendChild(el('b','',c.title)); t.appendChild(el('span','',c.tldr));
     b.appendChild(t);
     b.addEventListener('click',()=>entry(i));
-    app.appendChild(b);
+    grid.appendChild(b); thumbs.push([cvv,c]);
     requestAnimationFrame(()=>paint(cvv,c,state[c.id],true));
   });
+  refresh=()=>thumbs.forEach(([cv,c])=>paint(cv,c,state[c.id],true));
   const f=el('div','foot');
   f.appendChild(el('p','',AUTHOR+' \u00b7 '+CRED));
   f.appendChild(el('p','','Every picture is generated from published parameters. It teaches the geometry, not the procedure, and it is not a patient. '+VERSION+', built '+BUILT+'.'));
@@ -745,14 +841,17 @@ function index(){
 function entry(i){
   const c=CARDS[i], st=state[c.id];
   app.className='ent'; app.innerHTML='';
+  const hd=el('div','hd'), cols=el('div','cols'), fig=el('div','fig'), tx=el('div','txt');
+  app.appendChild(hd); app.appendChild(cols); cols.appendChild(fig); cols.appendChild(tx);
   const bk=el('button','bk','\u2190 All terms'); bk.type='button';
-  bk.addEventListener('click',index); app.appendChild(bk);
+  bk.addEventListener('click',index); hd.appendChild(bk);
   const eb=el('p','eyebrow',`TERM ${i+1<10?'0':''}${i+1} \u00b7 ${(c.topic||'').toUpperCase()}`);
-  eb.style.marginTop='8px'; app.appendChild(eb);
-  app.appendChild(el('h1','',c.title));
+  eb.style.marginTop='8px'; hd.appendChild(eb);
+  hd.appendChild(el('h1','',c.title));
+  const kh=c.kh||KH[c.pic]||470;
   const win=el('div','win'); const cvv=document.createElement('canvas');
-  cvv.setAttribute('role','img'); cvv.style.height='min(58vh,'+(KH[c.pic]||470)+'px)';
-  win.appendChild(cvv); app.appendChild(win);
+  cvv.setAttribute('role','img'); cvv.style.height='min(58vh,'+kh+'px)';
+  win.appendChild(cvv); fig.appendChild(win);
   let anim=0;
   const redraw=()=>{ const a=paint(cvv,c,st,false); cvv.setAttribute('aria-label',a); return a; };
   /* drag */
@@ -788,7 +887,7 @@ function entry(i){
                  typeof st[k.key]==="number" ? Math.abs(st[k.key]-v)<0.51 : st[k.key]===v;
       b.setAttribute('aria-pressed',cur?'true':'false'); }); }); };
   (c.ctrl||[]).forEach((k,ki)=>{
-    const kl=el('p','eyebrow klab',k.k.toUpperCase()); app.appendChild(kl);
+    const kl=el('p','eyebrow klab',k.k.toUpperCase()); fig.appendChild(kl);
     const row=el('div','krow'); row.setAttribute('role','group'); row.setAttribute('aria-label',k.k);
     k.opts.forEach((o,j)=>{
       const b=el('button','',o[1]); b.type='button';
@@ -812,13 +911,13 @@ function entry(i){
       });
       row.appendChild(b);
     });
-    rows.push(row); app.appendChild(row);
+    rows.push(row); fig.appendChild(row);
   });
   syncChips();
   const one=el('div','oneline'); one.appendChild(el('p','eyebrow','IN ONE LINE'));
-  one.appendChild(el('p','',c.tldr)); app.appendChild(one);
-  app.appendChild(el('p','lede',c.lede));
-  c.body.forEach(b=>{ if(b.h) app.appendChild(el('h2','',b.h));
+  one.appendChild(el('p','',c.tldr)); tx.appendChild(one);
+  tx.appendChild(el('p','lede',c.lede));
+  c.body.forEach(b=>{ if(b.h) tx.appendChild(el('h2','',b.h));
     else if(b.tab){ const tb=el('div','dtab'); tb.setAttribute('role','table');
       const NUM=/^[\d.]+ ?(mm|%|\u00b0|\u00d7)?$/;
       b.tab.forEach((row,ri)=>{ const tr=el('div',ri?'dtr':'dtr dth'); tr.setAttribute('role','row');
@@ -826,14 +925,14 @@ function entry(i){
         const v=el('span',NUM.test(row[1])?'dv2':'dvp',row[1]);
         v.setAttribute('role',ri?'cell':'columnheader');
         tr.appendChild(a); tr.appendChild(v); tb.appendChild(tr); });
-      app.appendChild(tb); }
-    else app.appendChild(el('p','body',b.p)); });
+      tx.appendChild(tb); }
+    else tx.appendChild(el('p','body',b.p)); });
   const s=el('div','src'); s.appendChild(el('p','eyebrow','SOURCES'));
-  c.src.forEach(x=>s.appendChild(el('p','',x))); app.appendChild(s);
+  c.src.forEach(x=>s.appendChild(el('p','',x))); tx.appendChild(s);
   if(c.links){ const lr=el('div','');
     c.links.forEach(([tt,h])=>{ const a=document.createElement('a'); a.className='plink';
       a.href=h; a.target='_blank'; a.rel='noopener'; a.textContent=tt+' \u2192'; lr.appendChild(a); });
-    app.appendChild(lr); }
+    tx.appendChild(lr); }
   const nav=el('div','nav');
   const mk=(j,kind,cls)=>{ const b=el('button',cls); b.type='button';
     b.appendChild(el('span','k',kind));
@@ -841,14 +940,33 @@ function entry(i){
     b.addEventListener('click',()=> j===null?index():entry(j)); return b; };
   nav.appendChild(mk(i>0?i-1:null,'\u2190 PREVIOUS',''));
   nav.appendChild(mk(i<CARDS.length-1?i+1:null,'NEXT \u2192','r'));
-  app.appendChild(nav);
+  tx.appendChild(nav);
+  fit(cvv,kh);
+  refresh=()=>{ fit(cvv,kh); redraw(); };
   requestAnimationFrame(redraw);
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>redraw());
   live.textContent=c.title+', term '+(i+1)+' of '+CARDS.length+'. '+c.tldr;
   window.scrollTo(0,0);
 }
-window.addEventListener('resize',()=>{});
-if(document.fonts&&document.fonts.ready) document.fonts.ready.then(index); else index();
+/* Rotation or a resized window redraws the current screen for its new size. On a phone
+   only a change of width counts, so the toolbar sliding away while scrolling does nothing. */
+let rzf=0, lastW=window.innerWidth, lastH=window.innerHeight;
+window.addEventListener('resize',()=>{
+  const w=window.innerWidth, h=window.innerHeight;
+  if(w===lastW&&(h===lastH||tier()===0)) return;
+  lastW=w; lastH=h; cancelAnimationFrame(rzf);
+  rzf=requestAnimationFrame(()=>{ if(refresh) refresh(); });
+});
+/* A term's own address opens that term. Nothing is remembered: an ordinary visit, or a
+   reload, always starts at the list of terms. */
+function boot(){
+  const h=decodeURIComponent((location.hash||'').slice(1)).toLowerCase();
+  const i=h?CARDS.findIndex(c=>c.slug===h):-1;
+  if(i>=0){ entry(i); try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+  else index();
+}
+window.addEventListener('hashchange',boot);
+if(document.fonts&&document.fonts.ready) document.fonts.ready.then(boot); else boot();
 </script>
 </body>
 </html>

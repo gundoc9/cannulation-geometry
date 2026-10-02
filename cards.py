@@ -175,6 +175,7 @@ CARDS = [
  "src":["Held. Flow figures from Moustaqim-Barrette Table 1, cited. The percentages are this dictionary's arithmetic on their figures."]},
 {
  "id":"out-of-plane","topic":"The screen","title":"Out of plane","pic":"planes",
+ "film":{"src": "following-the-needle-tip-app.mp4", "title": "Dynamic needle tip positioning", "secs": 69, "w": 1080, "h": 1350, "label": "Watch the film (69 s)"},
  "tldr":"In short axis the needle is a dot, and the dot looks the same anywhere along the shaft.",
  "lede":"Cut a length of spaghetti anywhere and the cut end looks identical; only past the end is there nothing to cut.",
  "ctrl":[{"k":"Scan plane","key":"plane","opts":[[14,"On the shaft"],[30.2,"At the tip"],[33,"Past the tip"]]}],
@@ -185,7 +186,7 @@ CARDS = [
   {"h":"Telling tip from shaft"},
   {"p":"The dot exists where the plane crosses the catheter and nowhere else, so sliding past the tip makes it vanish, and sliding back brings it back. Moustaqim-Barrette's strategy table states it directly: once the tip is reached, any further probe translation will cause the needle to disappear."},
   {"h":"Where this dictionary stops"},
-  {"p":"Both papers centre this short axis, out of plane view in children. The technique built on the vanishing dot, dynamic needle tip positioning, moves probe and needle in alternating small steps, and it is a separate subject, out of scope here with the rest of technique."}],
+  {"p":"Both papers centre this short axis, out of plane view in children. The technique built on the vanishing dot, dynamic needle tip positioning, moves probe and needle in alternating small steps, and the film below shows it. The rest of technique is out of scope here."}],
  "src":["Held. Forrest and Keys build their insertion sequence on sliding the probe until the dot shrinks to the tip, and Moustaqim-Barrette confirm tip against shaft by translating the probe until the dot disappears and reappears.",
         "The pictures are generated from this card's own geometry and are not taken from either paper's figures."]},
 {
@@ -198,7 +199,7 @@ CARDS = [
   {"h":"The larger part"},
   {"p":"Most of cannulation is haptic: the change in resistance as a wall gives, the feel of a vein that rolls away, knowing when to stop and move. No diagram teaches any of it, and this dictionary does not pretend otherwise."},
   {"h":"What is out of scope here"},
-  {"p":"Technique, including needle tip tracking under ultrasound, which is a separate subject; site selection; and everything about the child in front of you."},
+  {"p":"Technique, beyond the short film on the Out of plane card; site selection; and everything about the child in front of you."},
   {"h":"And the provenance"},
   {"p":"Both thresholds are second-hand, the intravascular-length data behind them is adult, and the 65% rule is a geometric recommendation that no trial has tested. That is stated on each card that uses them, and it is worth restating once at the end."}],
  "src":["Held for needle deflection and for the haptic limit. The rest is a summary of provenance already stated card by card."]},

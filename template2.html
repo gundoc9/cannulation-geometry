@@ -110,6 +110,24 @@ p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
 .plink{display:inline-block;margin:10px 10px 0 0;padding:11px 15px;border:1.5px solid var(--amber);
   border-radius:12px;color:var(--amber);font-family:var(--mono);font-size:12px;text-decoration:none;}
 .plink:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+/* v23: the film, a file beside the page, loaded only when asked for */
+.filmbtn{display:inline-flex;align-items:center;gap:9px;min-height:44px;margin:2px 0 6px;padding:0 18px 0 14px;
+  border:1.5px solid var(--ink);border-radius:22px;background:var(--card);color:var(--ink);cursor:pointer;
+  font-family:var(--mono);font-size:12.5px;}
+.filmbtn svg{width:13px;height:13px;flex:none;}
+.filmbtn:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
+.film{position:fixed;inset:0;z-index:50;background:#0D181B;display:flex;align-items:center;justify-content:center;
+  padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom));}
+.film[hidden]{display:none;}
+.filmbox{width:min(100%,calc((100vh - 132px) * 0.8000));width:min(100%,calc((100dvh - 132px) * 0.8000));}
+.film video{display:block;width:100%;height:auto;background:#D4C099;border-radius:6px;}
+.filmbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 10px;
+  color:#EFE9DC;font-family:var(--body);font-size:14px;}
+.filmx{flex:none;min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+  background:none;color:#EFE9DC;border:1px solid rgba(239,233,220,.55);border-radius:22px;cursor:pointer;}
+.filmx svg{width:16px;height:16px;}
+.filmx:focus-visible{outline:2px solid var(--acc);outline-offset:2px;}
+.filmnote{color:#D8D0C0;font-family:var(--body);font-size:13px;margin:10px 0 0;min-height:19px;text-align:center;}
 .foot{margin-top:32px;padding-top:15px;border-top:1px solid var(--rule);}
 .foot p{font-size:12.5px;line-height:1.55;color:var(--dim);margin:0 0 5px;}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
@@ -172,7 +190,7 @@ window.addEventListener('unhandledrejection',e=>{
 });
 const CARDS = __CARDS__;
 const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
-const VERSION="v22", BUILT="24 September 2026";
+const VERSION="v23", BUILT="1 October 2026";
 
 /* ================= geometry ================= */
 const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));
@@ -840,6 +858,40 @@ function index(){
   window.scrollTo(0,0);
 }
 
+/* v23: the film, a file beside the page, loaded only when asked for */
+let filmEl=null, filmFrom=null;
+const filmKey=e=>{ if(e.key==='Escape') closeFilm(); };
+function openFilm(f,from){
+  if(!filmEl){
+    filmEl=el('div','film'); filmEl.hidden=true; filmEl.setAttribute('role','dialog');
+    filmEl.setAttribute('aria-modal','true'); filmEl.setAttribute('aria-label',f.title);
+    const bar=el('div','filmbar'); bar.appendChild(el('span','',f.title+' · '+f.secs+' s'));
+    const x=el('button','filmx'); x.type='button'; x.setAttribute('aria-label','Close the film');
+    x.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="1.8" fill="none"/></svg>';
+    x.addEventListener('click',closeFilm); bar.appendChild(x);
+    const v=document.createElement('video'); v.setAttribute('playsinline',''); v.setAttribute('controls','');
+    v.setAttribute('preload','none'); v.width=f.w; v.height=f.h;
+    const nt=el('p','filmnote','');
+    v.addEventListener('waiting',()=>{ nt.textContent='Loading'; });
+    v.addEventListener('playing',()=>{ nt.textContent=''; });
+    v.addEventListener('error',()=>{ if(!filmEl.hidden) nt.textContent=(v.error&&v.error.code===4)?
+      'This browser cannot play the film.':'The film did not load. Check the connection and try again.'; });
+    const box=el('div','filmbox'); box.appendChild(bar); box.appendChild(v); box.appendChild(nt);
+    filmEl.appendChild(box);
+    filmEl.addEventListener('click',e=>{ if(e.target===filmEl) closeFilm(); });   // a tap outside the film closes it
+    document.body.appendChild(filmEl);
+  }
+  filmFrom=from||null; const fv=filmEl.querySelector('video'); filmEl.querySelector('.filmnote').textContent='';
+  fv.src=f.src; filmEl.hidden=false; document.addEventListener('keydown',filmKey);
+  const pr=fv.play(); if(pr&&pr.catch) pr.catch(()=>{});
+  filmEl.querySelector('.filmx').focus();
+}
+function closeFilm(){
+  if(!filmEl||filmEl.hidden) return;
+  const fv=filmEl.querySelector('video'); fv.pause(); fv.removeAttribute('src'); fv.load();   // stop the download too
+  filmEl.hidden=true; document.removeEventListener('keydown',filmKey); filmEl.querySelector('.filmnote').textContent='';
+  if(filmFrom&&document.body.contains(filmFrom)) filmFrom.focus();
+}
 function entry(i){
   const c=CARDS[i], st=state[c.id];
   app.className='ent'; app.innerHTML='';
@@ -932,6 +984,10 @@ function entry(i){
         tr.appendChild(a); tr.appendChild(v); tb.appendChild(tr); });
       tx.appendChild(tb); }
     else tx.appendChild(el('p','body',b.p)); });
+  if(c.film){ const fb=el('button','filmbtn'); fb.type='button';
+    fb.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.5l9 5.5-9 5.5z" fill="currentColor"/></svg>';
+    fb.appendChild(el('span','',c.film.label)); fb.addEventListener('click',()=>openFilm(c.film,fb));
+    tx.appendChild(fb); }   // v23: the film, one tap away
   const s=el('div','src'); s.appendChild(el('p','eyebrow','SOURCES'));
   c.src.forEach(x=>s.appendChild(el('p','',x))); tx.appendChild(s);
   if(c.links){ const lr=el('div','');

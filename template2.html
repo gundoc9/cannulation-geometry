@@ -44,7 +44,7 @@ body{font-family:var(--body);-webkit-font-smoothing:antialiased;
      is untappable in portrait on a phone and returns in landscape. */
   padding:env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);}
 main{max-width:620px;margin:0 auto;padding:20px 16px 60px;}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--dim);margin:0;}
 .bk{background:none;border:0;padding:0 14px 0 0;margin:0 0 -5px;cursor:pointer;
   display:inline-flex;align-items:center;min-height:44px;
@@ -90,7 +90,7 @@ p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
 .dtr{display:flex;align-items:baseline;justify-content:space-between;
   border-top:1px solid var(--rule);padding:9px 0;}
 .dtr.dth{border-top:0;padding:0 0 7px;}
-.dth .dl,.dth .dv2,.dth .dvp{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+.dth .dl,.dth .dv2,.dth .dvp{font-family:var(--mono);font-size:12px;letter-spacing:.12em;
   text-transform:uppercase;color:var(--dim);}
 .dl{font-family:var(--body);font-size:13.5px;color:var(--dim);}
 .dv2{font-family:var(--mono);font-size:13px;color:var(--ink);text-align:right;}
@@ -104,9 +104,15 @@ p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
   border-radius:13px;background:var(--card);}
 .nav button:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
 .nav .r{text-align:right;}
-.nav span.k{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.13em;
+.nav span.k{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.13em;
   text-transform:uppercase;color:var(--dim);}
 .nav span.v{display:block;font-family:var(--disp);font-weight:700;font-size:16px;margin-top:3px;}
+/* v24: the card navigation stays on screen, so Next is visible without scrolling */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;margin:0;
+  padding:8px max(16px,calc(50% - 294px)) calc(8px + env(safe-area-inset-bottom));
+  background:var(--cream);border-top:1px solid var(--rule);}
+.nav button{min-height:52px;padding:7px 13px;}
+main.ent{padding-bottom:108px;}
 .plink{display:inline-block;margin:10px 10px 0 0;padding:11px 15px;border:1.5px solid var(--amber);
   border-radius:12px;color:var(--amber);font-family:var(--mono);font-size:12px;text-decoration:none;}
 .plink:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
@@ -150,6 +156,8 @@ p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
   .oneline p,p.body{font-size:17px;}
   .lede{font-size:18px;}
   .foot{max-width:640px;}
+  .nav{padding-left:max(32px,calc(50% - 348px));padding-right:max(32px,calc(50% - 348px));}
+  main.ent{padding-bottom:116px;}
 }
 @media (min-width:980px) and (min-height:600px){
   main{max-width:1320px;padding:32px 40px 80px;}
@@ -158,6 +166,9 @@ p.body{font-size:16px;line-height:1.62;margin:0 0 14px;}
     position:-webkit-sticky;position:sticky;top:20px;top:calc(20px + env(safe-area-inset-top));}
   .ent .txt{flex:0 0 38%;min-width:360px;max-width:460px;}
   .ent .txt .oneline{margin-top:14px;}
+  .nav{position:-webkit-sticky;position:sticky;left:auto;right:auto;bottom:0;margin:26px 0 0;
+    padding:12px 0 calc(12px + env(safe-area-inset-bottom));}
+  main.ent{padding-bottom:80px;}
 }
 @media (min-width:1200px) and (min-height:600px){
   .idx .grid .row-card{width:calc(33.333% - 12px);}
@@ -190,7 +201,7 @@ window.addEventListener('unhandledrejection',e=>{
 });
 const CARDS = __CARDS__;
 const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
-const VERSION="v23", BUILT="1 October 2026";
+const VERSION="v24", BUILT="22 October 2026";
 
 /* ================= geometry ================= */
 const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));

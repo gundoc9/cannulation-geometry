@@ -22,8 +22,8 @@ function Rec(){
     roundRect(x,y,w,hh){ for(const[px,py] of [[x,y],[x+w,y],[x,y+hh],[x+w,y+hh]]) t(px,py); calls.push({op:'rect'});},
     fillRect(x,y,w,h){calls.push({op:'rect',x,y,w,h});},
     strokeRect(x,y,w,h){calls.push({op:'rect',x,y,w,h});},
-    stroke(){},fill(){},
-    fillText(txt,x,y){calls.push({op:'text',t:String(txt),x,y});},
+    stroke(){},fill(){},setLineDash(){},getLineDash(){return [];},
+    fillText(txt,x,y){calls.push({op:'text',t:String(txt),x,y});},strokeText(){},
     measureText(txt){return {width:String(txt).length*6.2};},
     createImageData(w,h){return{data:new Uint8ClampedArray(w*h*4),width:w,height:h};},
     putImageData(){},drawImage(){},
@@ -47,7 +47,7 @@ eval(js+';globalThis.__X={CARDS,PICS,G,state,KH};');
 const {CARDS,PICS,G,state,KH}=globalThis.__X;
 let fails=[]; const g=(n,ok,d)=>{console.log(`  [${ok?'ok  ':'FAIL'}] ${n}${d?'  '+d:''}`); if(!ok)fails.push(n);};
 const stFor=c=>{const st={}; (c.ctrl||[]).forEach(k=>{ if(k.key==="len") st.len=0; else st[k.key]=k.opts[0][0];}); return st;};
-const run=(c,st)=>{calls=[]; const HH=KH[c.pic]||470; const label=PICS[c.pic](Rec(),W,HH,c,st,false)||''; return {calls:calls.slice(),label,HH};};
+const run=(c,st)=>{calls=[]; const HH=c.kh||KH[c.pic]||470; const label=PICS[c.pic](Rec(),W,HH,c,st,false)||''; return {calls:calls.slice(),label,HH};};
 
 console.log('=== H1 bounds ===');
 let off=[];

@@ -201,7 +201,7 @@ window.addEventListener('unhandledrejection',e=>{
 });
 const CARDS = __CARDS__;
 const AUTHOR="Dr Ganesh Sivasankara", CRED="MD \u00b7 FRCA \u00b7 FCARCSI \u00b7 Consultant Anaesthetist";
-const VERSION="v24", BUILT="22 October 2026";
+const VERSION="v25", BUILT="28 October 2026";
 
 /* ================= geometry ================= */
 const rad=d=>d*Math.PI/180, sin=d=>Math.sin(rad(d)), cos=d=>Math.cos(rad(d)), tan=d=>Math.tan(rad(d));
@@ -504,7 +504,7 @@ function picTrack(ctx,W,H,c,st,small){
   vy+=52;
   if((c.marks||[]).includes("m65")){
     const ok=mark(0.65*L,"65%",true);
-    txt(ctx,`0.65 × ${L} = ${(0.65*L).toFixed(1)} mm   ${ok?"inside":"past the skin"}`,20,vy,MONO(12),ok?OKC:NOC);
+    txt(ctx,`0.65 × ${L} = ${(Math.round(0.65*L*10+1e-9)/10).toFixed(1)} mm   ${ok?"inside":"outside the vein"}`,20,vy,MONO(12),ok?OKC:NOC);
     vy+=26; note.push(ok?"rule met":"rule not met");
   }
   if((c.marks||[]).includes("abs")){
@@ -639,7 +639,7 @@ function picCross(ctx,W,H,c,st,small){
     const y=86+i*50, r=od*11;
     ctx.fillStyle=rgba(col,1); ctx.beginPath(); ctx.arc(gx+9,y,r,0,7); ctx.fill();
     txt(ctx,g,gx+34,y+4,MONO(12),LL,0.95);
-    txt(ctx,(od/thr).toFixed(1),gx+86,y+4,MONO(12),LL);
+    txt(ctx,(Math.round(od/thr*10+1e-9)/10).toFixed(1),gx+86,y+4,MONO(12),LL);
   });
   ctx.font=MONO(10);                                     // caption under the vein, never past an edge
   const lw=s=>{ let w=0; for(const ch of s) w+=ctx.measureText(ch).width+1.1; return w-1.1; };

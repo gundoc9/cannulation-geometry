@@ -10,7 +10,7 @@ CARDS = [
  "ctrl":[{"k":"Probe pressure","key":"press","opts":[[0,"Light"],[1,"Firm"]]},
          {"k":"Caliper lands on","key":"targ","opts":[[0,"Front wall"],[1,"Lumen centre"]]}],
  "body":[
-  {"p":"Depth is measured straight down from the probe face to the front wall of the vein, not along the needle path and not to the middle of the lumen. Work the two controls and watch the caliper: the same vein gives three different answers while it stays exactly where it is."},
+  {"p":"Depth is measured straight down from the probe face to the front wall of the vein, not along the needle path and not to the middle of the lumen. Work the two controls and watch the caliper: the same vein gives four different answers while it stays exactly where it is."},
   {"h":"Which surface you count"},
   {"p":"A reading taken to the middle of the lumen gives 6.5 mm on this vein, against 5.0 mm to the front wall. Both papers behind this dictionary measure to the front wall, and every calculation later on assumes it, so the extra 1.5 mm of a centre reading would carry into every rule that uses the depth."},
   {"h":"How hard you are pressing"},
@@ -57,7 +57,7 @@ CARDS = [
   {"h":"What the data says"},
   {"p":"In adults, catheters with under 30% of their length inside the vein failed in every case, with a median working life of 3.7 hours. Between 30 and 64%, 32% failed and the median was 22.1 hours. At 65% or more, no failures were reported."},
   {"h":"Where those figures come from"},
-  {"p":"Those are adult figures from two secondary analyses, and this dictionary holds neither primary paper. What is paediatric is the consequence: infiltration is the leading cause of line failure in children, at around 10% of lines overall and 20 to 25% once therapy runs past four days."}],
+  {"p":"Those are adult figures from two emergency department studies by one Michigan group, a prospective cohort and a secondary analysis of a trial, and this dictionary holds neither primary paper. What is paediatric is the consequence: infiltration is the leading cause of line failure in children, at around 10% of lines overall and 20 to 25% once therapy runs past four days."}],
  "src":["Second-hand and adult. Forrest and Keys report the failure figures from Bahl 2024 and Pandurangadu 2018; neither primary is held here. The paediatric infiltration figures are Forrest and Keys' own."]},
 {
  "id":"rule-65","topic":"The rule","title":"The 65% rule","pic":"track","marks":["m65"],
@@ -65,7 +65,7 @@ CARDS = [
  "lede":"A budget with a single line on it: 35% of the catheter has to cover everything between skin and lumen.",
  "ctrl":[{"k":"Entry angle","key":"angle","opts":[[45,"45\u00b0"],[30,"30\u00b0"],[20,"20\u00b0"]]}],
  "body":[
-  {"p":"Written out, the constraint is one line: the path from skin to front wall has to fit inside 35% of the catheter's length. Move the angle and watch the mark on the shaft. When the mark is on the skin line, the rule is met with nothing to spare."},
+  {"p":"Written out, the constraint is one line: the path from skin to front wall has to fit inside 35% of the catheter's length. Move the angle and watch the mark on the shaft. When the mark is on the front wall of the vein, the rule is met with nothing to spare."},
   {"h":"Turned around, it sizes the catheter"},
   {"p":"The shortest catheter that satisfies it is the depth divided by 0.35 times the sine of the angle."},
   {"tab":[["Entry angle","Min length \u00f7 depth"],["45\u00b0","4.0\u00d7"],["30\u00b0","5.7\u00d7"],["20\u00b0","8.4\u00d7"]]},
@@ -106,7 +106,7 @@ CARDS = [
  "body":[
   {"p":"Moustaqim-Barrette put it plainly: only a qualitative gauge of needle angle relative to skin is available, so catheter lengths greater than the minimum should be selected. Forrest and Keys write that 45 degrees is difficult to judge and maintain, that 30 degrees or less is probably more common in practice, and that longer catheters are therefore generally preferable."},
   {"h":"What the chips are showing"},
-  {"p":"The chips are three readings of the same hand: the angle you are aiming for and the two you may actually be holding. Pick one and the card draws it. The mark on the shaft walks out toward the skin as the angle falls, and once it passes the skin the rule is no longer met."},
+  {"p":"The chips are three readings of the same hand: the angle you are aiming for and the two you may actually be holding. Pick one and the card draws it. The mark on the shaft walks back toward the front wall as the angle falls, and once it leaves the vein the rule is no longer met."},
   {"h":"The practical consequence"},
   {"p":"Two independent groups reach the same advice from the same limitation: take the number the calculation gives you and go longer than it."}],
  "src":["Held, both papers, quoted closely."]},
@@ -130,10 +130,10 @@ CARDS = [
  "body":[
   {"p":"Forrest and Keys size catheters against an absolute: 27.5 mm of catheter inside the vein, whatever the catheter is. The minimum length becomes 27.5 mm plus the skin-to-vein path, so 27.5 plus the depth divided by the sine of the angle."},
   {"h":"Where it comes from"},
-  {"p":"It comes from the same adult intravascular-length work as the 65% figure: one group read the finding as a proportion and the other as a length, so the two are not rival traditions."},
+  {"p":"It comes from the same group's adult intravascular-length work as the 65% figure: their earlier cohort reported the proportion of catheter in the vein and their later trial the length, so the two are not rival traditions."},
   {"h":"The mark on the shaft"},
   {"p":"Move the angle and watch it. This mark does not move when the catheter changes length, and the next card is about what that costs."}],
- "src":["Second-hand, the same two adult analyses as the intraluminal length card. This dictionary's reconstruction reproduces 17 of the 18 cells Forrest and Keys print; their 0.25 cm at 45 degree cell computes to 31.04 mm and prints 31. When quoting a number, use their table."]},
+ "src":["Second-hand, the same two adult studies as the intraluminal length card. This dictionary's reconstruction reproduces 17 of the 18 cells Forrest and Keys print; their 0.25 cm at 45 degree cell computes to 31.04 mm and prints 31. When quoting a number, use their table."]},
 {
  "id":"which-governs","topic":"The other rule","title":"Which rule governs","pic":"track","marks":["m65","abs"],
  "tldr":"A fraction of a short catheter is a short length, and that is where the two part company.",
@@ -146,7 +146,7 @@ CARDS = [
   {"h":"Above it"},
   {"p":"The proportion governs, and of the four stock lengths, 45 mm is the first where 65% of the catheter comes to more than 27.5 mm."},
   {"h":"What to do with that"},
-  {"p":"Both criteria come from the same adult data and neither has been tested in children, so for now the useful part is knowing which one is doing the work in a given device."}],
+  {"p":"Both criteria come from the same group's adult data and neither has been tested in children, so for now the useful part is knowing which one is doing the work in a given device."}],
  "src":["Derived from the two rules as each paper states them."]},
 {
  "id":"cvr","topic":"Width, not length","title":"Catheter-vein ratio","pic":"cross",
@@ -154,7 +154,7 @@ CARDS = [
  "lede":"A cork that is too wide will not go in, however short it is.",
  "ctrl":[{"k":"Threshold","key":"thr","opts":[[45,"45%"],[40,"40%"],[33,"33%"]]}],
  "body":[
-  {"p":"The rule is the catheter's outer diameter against the vein's diameter, and the sources disagree about the number. mini-MAGIC recommends 45% or less. The European ERPIUP consensus suggests 33% or less for long peripheral devices. Moustaqim-Barrette use under 0.4, excluding neonates, and 0.33 or less in premature neonates."},
+  {"p":"The rule is the catheter's outer diameter against the vein's diameter, and the sources disagree about the number. mini-MAGIC recommends 45% or less. The European ERPIUP consensus suggests 33% or less for long peripheral devices. Moustaqim-Barrette use 0.4 or less in children and 0.33 or less in premature neonates."},
   {"h":"What the disagreement costs"},
   {"p":"At 45% a 22G needs a 2.0 mm vein, and at 33% the same device needs 2.7 mm. Switch the threshold and watch which gauges still fit."},
   {"h":"Measured under what"},
@@ -180,11 +180,11 @@ CARDS = [
  "lede":"Cut a length of spaghetti anywhere and the cut end looks identical; only past the end is there nothing to cut.",
  "ctrl":[{"k":"Scan plane","key":"plane","opts":[[14,"On the shaft"],[30.2,"At the tip"],[33,"Past the tip"]]}],
  "body":[
-  {"p":"An ultrasound image is one thin slice. Held across the vein it cuts the needle too, so the whole device appears as a single bright dot, and a slice through the shaft gives the same dot as a slice through the tip. Drag the plane along the catheter in the upper picture and watch the screen beneath it."},
+  {"p":"An ultrasound image is one thin slice. Held across the vein it cuts the needle too, so the whole device appears as a single bright dot, and a slice through the shaft gives much the same dot as a slice through the tip. Drag the plane along the catheter in the upper picture and watch the screen beneath it."},
   {"h":"What the screen cannot say"},
   {"p":"The upper picture has the whole catheter in view, so the tip is never in doubt there. The screen beneath it has one slice, and while that slice crosses steel the dot neither grows nor shrinks as the plane moves along the shaft. Only the depth changes: the dot deepens down the entry slope, then rides level in the middle of the lumen."},
   {"h":"Telling tip from shaft"},
-  {"p":"The dot exists where the plane crosses the catheter and nowhere else, so sliding past the tip makes it vanish, and sliding back brings it back. Moustaqim-Barrette's strategy table states it directly: once the tip is reached, any further probe translation will cause the needle to disappear."},
+  {"p":"The dot exists where the plane crosses the catheter and nowhere else. On a real screen it shrinks to a point over the bevel; sliding past the tip makes it vanish, and sliding back brings it back. Moustaqim-Barrette's strategy table states it directly: once the tip is reached, any further probe translation will cause the needle to disappear."},
   {"h":"Where this dictionary stops"},
   {"p":"Both papers centre this short axis, out of plane view in children. The technique built on the vanishing dot, dynamic needle tip positioning, moves probe and needle in alternating small steps, and the film below shows it. The rest of technique is out of scope here."}],
  "src":["Held. Forrest and Keys build their insertion sequence on sliding the probe until the dot shrinks to the tip, and Moustaqim-Barrette confirm tip against shaft by translating the probe until the dot disappears and reappears.",

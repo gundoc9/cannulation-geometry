@@ -136,6 +136,7 @@ main.ent{padding-bottom:108px;}
 .filmnote{color:#D8D0C0;font-family:var(--body);font-size:13px;margin:10px 0 0;min-height:19px;text-align:center;}
 .foot{margin-top:32px;padding-top:15px;border-top:1px solid var(--rule);}
 .foot p{font-size:12.5px;line-height:1.55;color:var(--dim);margin:0 0 5px;}
+.foot a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
 .sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;
   white-space:nowrap;border:0;clip:rect(0 0 0 0);}
 /* One file, three layouts, chosen by the screen it is opened on: the phone column above;
@@ -864,6 +865,9 @@ function index(){
   const f=el('div','foot');
   f.appendChild(el('p','',AUTHOR+' \u00b7 '+CRED));
   f.appendChild(el('p','','Every picture is generated from published parameters. It teaches the geometry, not the procedure, and it is not a patient. '+VERSION+', built '+BUILT+'.'));
+  f.appendChild(el('p','', "This page keeps nothing about you and sends nothing anywhere."));
+  f.appendChild(el('p','', "Built with Claude (Anthropic). It wrote the code and the first draft of the text; every figure and source was checked by me."));
+  { const l=el('p',''); l.innerHTML="© 2026 Ganesh Sivasankara. Shared under <a href=\"https://creativecommons.org/licenses/by-nc-nd/4.0/\" target=\"_blank\" rel=\"noopener\">CC BY-NC-ND 4.0</a>: you may share it unchanged, with credit, but not for commercial use."; f.appendChild(l); const e=el('p',''); e.innerHTML="Spotted an error? <a href=\"https://www.linkedin.com/in/ganeshsivasankara\" target=\"_blank\" rel=\"noopener\">Message me on LinkedIn</a>."; f.appendChild(e); }
   app.appendChild(f);
   live.textContent='Cannulation geometry. '+CARDS.length+' terms.';
   window.scrollTo(0,0);

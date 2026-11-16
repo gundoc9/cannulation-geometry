@@ -26,7 +26,8 @@ def make(src_html, hook="", phone_height_fix=True):
     js = downlevel(m.group(1))
     if phone_height_fix:
         js = js.replace("'min(58vh,'+(KH[c.pic]||470)+'px)'", "(KH[c.pic]||470)+'px'")
-        js = js.replace("'min(58vh,'+kh+'px)'", "kh+'px'")
+        assert js.count("'min('+khp+'px,max(380px,58vh))'") == 2, "window height rule not found"
+        js = js.replace("'min('+khp+'px,max(380px,58vh))'", "khp+'px'")
     boot = re.search(r"if\(document\.fonts&&document\.fonts\.ready\) document\.fonts\.ready\.then\((\w+)\); else \w+\(\);\s*$", js)
     assert boot, "boot line not found"
     js = js[:boot.start()] + "setTimeout(function(){ %s(); %s },700);\n" % (boot.group(1), hook)

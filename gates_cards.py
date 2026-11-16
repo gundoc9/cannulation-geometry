@@ -26,6 +26,7 @@ TERMS={ "vein-depth":["vein depth","probe pressure"],
         "flattening":["resting angle","tip angle","tip angles"],
         "floor-275":["27.5 mm","2.75 cm","absolute"],
         "which-governs":["crossover"],
+        "choosing-length":[],
         "cvr":["catheter-vein ratio","catheter-to-vein ratio"],
         "flow-dwell":["flow"],
         "out-of-plane":["out of plane","short axis","long axis","scan plane"],
@@ -56,7 +57,8 @@ checks=[("1.4",1/sin(45)),("2.0",1/sin(30)),("2.9",1/sin(20)),
         ("11.1",0.35*45*sin(45)),("0.08",8.0-0.35*32*sin(45)),
         ("29.3",100*(1-sin(30)/sin(45))),("51.6",100*(1-sin(20)/sin(45))),
         ("42.3",27.5/0.65),("3.18",(32-27.5)*sin(45)),("31.04",27.5+2.5/sin(45)),
-        ("2.0",0.9/0.45),("2.7",0.9/0.33),("22.7",100*(22-17)/22),("25.7",100*(35-26)/35)]
+        ("2.0",0.9/0.45),("2.7",0.9/0.33),("22.7",100*(22-17)/22),("25.7",100*(35-26)/35),
+        ("64.4",100*(45-8/sin(30))/45),("14.8",27.5*0.35/0.65)]
 def dp(s): return len(s.split(".")[1]) if "." in s else 0
 bad=[(s,round(v,4)) for s,v in checks if round(v,dp(s))!=float(s)]
 gate("printed values reproduce an independent recompute", not bad, str(bad) if bad else f"{len(checks)} values")
@@ -97,7 +99,7 @@ badrefs=[r for r in refs if not any(r.strip() in t for t in titles)]
 gate("every 'the card on X' names a real title", not badrefs, str(badrefs) if badrefs else str(refs))
 
 print("\n=== G7  second-hand provenance is declared where a threshold is stated ===")
-need=["rule-65","floor-275","intraluminal","flattening"]
+need=["rule-65","floor-275","intraluminal","flattening","choosing-length"]
 miss=[i for i in need if "second-hand" not in " ".join(next(c for c in CARDS if c["id"]==i)["src"]).lower()]
 gate("threshold cards flag second-hand sourcing", not miss, str(miss))
 

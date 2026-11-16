@@ -26,6 +26,8 @@ function Rec(){
     fillText(txt,x,y){calls.push({op:'text',t:String(txt),x,y});},strokeText(){},
     measureText(txt){return {width:String(txt).length*6.2};},
     createImageData(w,h){return{data:new Uint8ClampedArray(w*h*4),width:w,height:h};},
+    createLinearGradient(x0,y0,x1,y1){ if(![x0,y0,x1,y1].every(Number.isFinite)) throw new TypeError('createLinearGradient: non-finite');
+      return {addColorStop(o){ if(!(o>=0&&o<=1)) throw new Error('IndexSizeError: The index is not in the allowed range.'); }}; },
     putImageData(){},drawImage(){},
     translate(dx,dy){const c=Math.cos(cur.r),s=Math.sin(cur.r);cur.x+=dx*c-dy*s;cur.y+=dx*s+dy*c;},rotate(a){cur.r+=a;},
     strokeStyle:'',fillStyle:'',lineWidth:1,font:'',textAlign:'left',textBaseline:'alphabetic',
@@ -43,10 +45,10 @@ const mkEl=()=>({appendChild(){},setAttribute(){},getAttribute:()=>'',addEventLi
 global.document={getElementById:()=>mkEl(),createElement:()=>mkEl(),body:{},
   fonts:{ready:{then:f=>{}}}};
 global.CanvasRenderingContext2D=function(){}; CanvasRenderingContext2D.prototype={};
-eval(js+';globalThis.__X={CARDS,PICS,G,state,KH};');
+eval(js+';globalThis.__X={CARDS,PICS,G,state,KH,chooseGeom};');
 const {CARDS,PICS,G,state,KH}=globalThis.__X;
 let fails=[]; const g=(n,ok,d)=>{console.log(`  [${ok?'ok  ':'FAIL'}] ${n}${d?'  '+d:''}`); if(!ok)fails.push(n);};
-const stFor=c=>{const st={}; (c.ctrl||[]).forEach(k=>{ if(k.key==="len") st.len=0; else st[k.key]=k.opts[0][0];}); return st;};
+const stFor=c=>{const st={}; (c.ctrl||[]).forEach(k=>{ if(k.key==="len") st.len=0; else st[k.key]=k.def!==undefined?k.def:k.opts[0][0];}); return st;};
 const run=(c,st)=>{calls=[]; const HH=c.kh||KH[c.pic]||470; const label=PICS[c.pic](Rec(),W,HH,c,st,false)||''; return {calls:calls.slice(),label,HH};};
 
 console.log('=== H1 bounds ===');
@@ -81,7 +83,7 @@ const need={"vein-depth":["PROBE","DEPTH FROM PROBE FACE"],"gauge-length":["24G"
  "rule-65":["65%","MIN LENGTH \u00f7 DEPTH"],"reach":["MAX VEIN DEPTH SERVED","SKIN"],
  "shallowing":["OF THE 45\u00b0 REACH KEPT"],"judging-angle":["65%","IN THE VEIN"],
  "flattening":["SHAFT ANGLE"],"floor-275":["27.5","MIN LENGTH HERE"],
- "which-governs":["65%","27.5","THE BINDING MARK"],"cvr":["22G","MIN VEIN FOR A 22G"],
+ "which-governs":["65%","27.5","THE BINDING MARK"],"choosing-length":["65% RULE NEEDS","27.5 mm RULE NEEDS","NEEDLE PATH TO THE VEIN","SKIN","VEIN"],"cvr":["22G","MIN VEIN FOR A 22G"],
  "flow-dwell":["MAX FLOW","mL/min"],"limits":["65%","27.5"],
  "out-of-plane":["LONG AXIS","SHORT AXIS","WHERE THE PLANE IS"]};
 let miss=[];
@@ -102,7 +104,7 @@ for(const id of ['rule-65','judging-angle','floor-275']){
     const L=32, lin=L-5/sin(o[0]);
     const lab=run(c,{angle:o[0]}).label;
     if(id!=='floor-275'){
-      const said=lab.includes('rule met')||run(c,{angle:o[0]}).calls.some(z=>z.op==='text'&&z.t.includes('inside'));
+      const said=lab.includes('rule met');
       if(said!==(0.65*L<=lin)) wrong.push(`${id}@${o[0]}`);
     }
   }
@@ -110,10 +112,11 @@ for(const id of ['rule-65','judging-angle','floor-275']){
 const wg=CARDS.find(x=>x.id==='which-governs');
 for(let j=0;j<4;j++){
   const L=[19,25,32,45][j], lin=L-5/sin(45);
-  const t=run(wg,{len:j}).calls.filter(z=>z.op==='text').map(z=>z.t).join('|').replace(/\s+/g,' ');
+  const t=run(wg,{len:j}).label;                      // the verdicts are drawn now, so the label carries them
   const beyond=27.5>L;
-  if(beyond!==t.includes('beyond the hub')) wrong.push(`wg@${L} beyond`);
+  if(beyond!==t.includes('shorter than 27.5 mm')) wrong.push(`wg@${L} beyond`);
   if(!beyond && (27.5<=lin)!==t.includes('27.5 mm inside')) wrong.push(`wg@${L} abs`);
+  if((0.65*L<=lin)!==t.includes('rule met')) wrong.push(`wg@${L} 65`);
 }
 g('marks agree with the formula', wrong.length===0, wrong.join(','));
 
@@ -124,7 +127,7 @@ for(const c of CARDS){ calls=[];
   catch(e){th.push(c.id+' THREW: '+e.message); continue;}
   if(calls.length<2) th.push(c.id+' only '+calls.length);
 }
-g('all 14 draw small', th.length===0, th.join(';'));
+g('every card draws small', th.length===0, th.join(';'));
 
 console.log('=== H6 drag mapping ===');
 let dm=[];
@@ -140,13 +143,17 @@ if(!(p0<=0.01&&stD.press>=0.99)) dm.push('depth->'+p0+','+stD.press);
 const pn=PICS.planes.drag; const stP={plane:14};
 pn(null,stP,40,100,W,H); const pLo=stP.plane; pn(null,stP,W-30,100,W,H);
 if(!(pLo<8 && stP.plane>30)) dm.push('planes->'+pLo.toFixed(1)+','+stP.plane.toFixed(1));
+{ const cc=CARDS.find(x=>x.id==='choosing-length'), HH=cc.kh||KH[cc.pic], gg=globalThis.__X.chooseGeom({depth:5,angle:45},W,HH,false), stC={depth:5,angle:45};
+  PICS.choose.drag(cc,stC,100,gg.skin+8*gg.S,W,HH); const dUp=stC.depth;           // upper picture: the front wall follows the finger
+  PICS.choose.drag(cc,stC,gg.x0+12*gg.S,gg.y0,W,HH); const dLo=stC.depth;          // lower picture: the end of the path follows it
+  if(Math.abs(dUp-8)>0.06||Math.abs(dLo-12*Math.sin(45*Math.PI/180))>0.06) dm.push('choose->'+dUp+','+dLo); }
 g('pointer maps to the value', dm.length===0, dm.join(','));
 
 console.log('=== H7 geometry clear of the readout band ===');
-const RD=new Set(["DEPTH FROM PROBE FACE","PATH \u00f7 DEPTH","IN THE VEIN","MIN LENGTH \u00f7 DEPTH","MIN LENGTH HERE","THE BINDING MARK","MAX VEIN DEPTH SERVED","OF THE 45\u00b0 REACH KEPT","SHAFT ANGLE","LENGTH","WHERE THE PLANE IS","OVER THE SHAFT","OVER THE TIP","PAST THE TIP","MAX FLOW","MIN VEIN FOR A 22G","mm","%","\u00b0","mL/min"]);
-const PILL=new Set(["DRAG THE PROBE","DRAG THE TIP","DRAG ALONG THE ARC","DRAG THE ANGLE","DRAG THE PLANE","SWITCH THE LENGTH","SWITCH THE LIMIT","PICK A CATHETER","STEP THROUGH"]);
+const RD=new Set(["DEPTH FROM PROBE FACE","PATH \u00f7 DEPTH","IN THE VEIN","MIN LENGTH \u00f7 DEPTH","MIN LENGTH HERE","THE BINDING MARK","MAX VEIN DEPTH SERVED","OF THE 45\u00b0 REACH KEPT","SHAFT ANGLE","LENGTH","WHERE THE PLANE IS","OVER THE SHAFT","OVER THE TIP","PAST THE TIP","MAX FLOW","MIN VEIN FOR A 22G","NEEDLE PATH TO THE VEIN","YOU HELD","mm","%","\u00b0","mL/min"]);
+const PILL=new Set(["DRAG THE PROBE","DRAG THE TIP","DRAG ALONG THE ARC","DRAG THE ANGLE","DRAG THE PLANE","DRAG THE VEIN","SWITCH THE LENGTH","SWITCH THE LIMIT","PICK A CATHETER","STEP THROUGH"]);
 let clr=[];
-for(const [id,st0] of [["which-governs",{len:0}],["flattening",{stage:2}],["cvr",{thr:33}],["gauge-length",{len:3}],["reach",{len:3,angle:20}],["intraluminal",{len:0}],["out-of-plane",{plane:33}]]){
+for(const [id,st0] of [["which-governs",{len:0}],["flattening",{stage:2}],["cvr",{thr:33}],["gauge-length",{len:3}],["reach",{len:3,angle:20}],["intraluminal",{len:0}],["out-of-plane",{plane:33}],["choosing-length",{depth:12,angle:20}]]){
   const c=CARDS.find(x=>x.id===id); const st={...stFor(c),...st0};
   const r=run(c,st);
   for(const z of r.calls) if(z.op==='text'){

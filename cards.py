@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Card data for the IV cannulation geometry primer. Lives in its own file and is
-injected at build. Every numeral in `body` must be declared in CLAIMS."""
+injected at build. Every numeral in `body` must be declared in CLAIMS.
+A control may carry "def", the value it starts at, when that is not its first option."""
 
 CARDS = [
 {
@@ -100,6 +101,7 @@ CARDS = [
  "src":["Derived. The invariance is this dictionary's own result and is checked across all four lengths."]},
 {
  "id":"judging-angle","topic":"The rule","title":"Judging the angle","pic":"track","marks":["m65"],"fan":True,
+ "tilt":{"label":"Check your own 45\u00b0","aim":45},
  "tldr":"Nobody reads the angle off a screen, and it is the variable the whole subject turns on.",
  "lede":"Nobody measures how steeply they are holding the needle, and everybody has an opinion about it.",
  "ctrl":[{"k":"Angle","key":"angle","opts":[[45,"Aiming 45\u00b0"],[30,"Likely 30\u00b0"],[20,"Maybe 20\u00b0"]]}],
@@ -108,8 +110,11 @@ CARDS = [
   {"h":"What the chips are showing"},
   {"p":"The chips are three readings of the same hand: the angle you are aiming for and the two you may actually be holding. Pick one and the card draws it. The mark on the shaft walks back toward the front wall as the angle falls, and once it leaves the vein the rule is no longer met."},
   {"h":"The practical consequence"},
-  {"p":"Two independent groups reach the same advice from the same limitation: take the number the calculation gives you and go longer than it."}],
- "src":["Held, both papers, quoted closely."]},
+  {"p":"Two independent groups reach the same advice from the same limitation: take the number the calculation gives you and go longer than it."},
+  {"h":"Try it on yourself"},
+  {"p":"On a phone or tablet, the button under the picture reads how steeply the handset is held, and the reading stays on the device. Hold it as if its long edge were the needle, at what you believe is 45 degrees to the table, and tap: the card draws the angle you held. It tests the eye on a handset that is not a needle, and holding an angle still is easier than keeping it while a needle advances, so take the result as a hint of how far a confident 45 can drift."}],
+ "src":["Held, both papers, quoted closely.",
+        "The tilt check is this dictionary's own addition and comes from neither paper. It reads the handset, not a needle."]},
 {
  "id":"flattening","topic":"The rule","title":"Flattening the tip","pic":"stages",
  "tldr":"The angle changes once the vein has been entered, so no single number describes it.",
@@ -148,6 +153,25 @@ CARDS = [
   {"h":"What to do with that"},
   {"p":"Both criteria come from the same group's adult data and neither has been tested in children, so for now the useful part is knowing which one is doing the work in a given device."}],
  "src":["Derived from the two rules as each paper states them."]},
+{
+ "id":"choosing-length","topic":"Both rules","title":"Choosing the length","pic":"choose",
+ "tldr":"Start from the depth you measured, and each rule names the shortest catheter that will do.",
+ "lede":"At the hire shop you already know the height of the wall, and the question is which of their ladders will reach it.",
+ "ctrl":[{"k":"Vein depth","key":"depth","def":5,"opts":[[3,"3 mm"],[5,"5 mm"],[8,"8 mm"],[11,"11 mm"]]},
+         {"k":"Entry angle","key":"angle","opts":[[45,"45°"],[30,"30°"],[20,"20°"]]}],
+ "body":[
+  {"p":"On the cards about the two rules the vein stayed 5 mm deep. Drag it to the depth you measured and pick the angle you expect to hold: the amber line is the path the needle covers before it reaches the front wall."},
+  {"h":"The same path, laid flat"},
+  {"p":"Under the vein that amber length is laid along a ruler twice, once for each rule. The 27.5 mm minimum wants 27.5 mm of catheter beyond the path, so its shortest catheter is the path plus 27.5 mm. The 65% rule lets the path take up 35% of the catheter, so its shortest catheter is the path divided by 0.35. A line drops from the end of each, through the four stock lengths, and a catheter meets a rule when it reaches that rule's line."},
+  {"h":"The stock that meets the 65% rule at 45°"},
+  {"tab":[["Vein depth","Lengths that meet it"],["3 mm","all four"],["5 mm","25, 32 and 45"],["8 mm","45 only"],["11 mm","45 only"]]},
+  {"p":"Drop to 30 degrees with the vein at 8 mm and none of the four meets it: the 45 mm catheter is left with 64.4% of its length in the vein."},
+  {"h":"Which rule asks for more"},
+  {"p":"While the path is under 14.8 mm the 27.5 mm minimum asks for the longer catheter, and past that the 65% rule does. The two are level at 42.3 mm, the crossover from the card on which rule governs."},
+  {"h":"What kind of answer this is"},
+  {"p":"It is a worked example on four stock lengths. The two rules behind it come from adult data and neither has been tested in children. The angle is the one you expect, which may not be the one you hold, and the depth is whatever the probe pressure made it. Both papers advise going longer than the minimum, and for a length to act on, their own tables are the place to look."}],
+ "src":["Derived. This dictionary's own arithmetic on the two rules as each paper states them; both thresholds are second-hand and come from adult data. The four lengths are the stock in Moustaqim-Barrette Table 1 and Forrest and Keys Table 1.",
+        "Neither paper's table is redrawn here. Moustaqim-Barrette print a length table for the 65% rule and Forrest and Keys one for the 27.5 mm minimum."]},
 {
  "id":"cvr","topic":"Width, not length","title":"Catheter-vein ratio","pic":"cross",
  "tldr":"The other geometric constraint, and this one is about width.",
@@ -219,4 +243,5 @@ CLAIMS = {
  "3.18":"derived","0.65":"criterion","17":"structural","18":"structural","0.25":"literature",
  "31.04":"derived","31":"literature","5":"literature","40":"criterion","33":"criterion","0.4":"criterion",
  "0.33":"criterion","2.0":"derived","2.7":"derived","22.7":"derived","25.7":"derived","8":"structural",
+ "11":"control","64.4":"derived","14.8":"derived",
 }
